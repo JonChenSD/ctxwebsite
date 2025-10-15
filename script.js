@@ -1319,9 +1319,28 @@ class ArtifactClusterSystem {
                 { type: 'text', content: 'Song Remedy is a collection of chakra-healing tracks designed to support mental wellness through sound therapy.', title: 'About Song Remedy' }
             ],
             'school-music': [
-                { type: 'text', content: 'School Music represents the educational journey of learning through sound and rhythm.', title: 'About School Music' },
-                { type: 'text', content: 'This collection explores the intersection of learning and musical expression.', title: 'Educational Philosophy' },
-                { type: 'text', content: 'Discover how music can be a powerful tool for learning and personal growth.', title: 'Learning Through Sound' }
+                { type: 'link', url: 'https://www.ninaprotocol.com/releases/rockie-rode-and-csa-vocal-band-gowanus-river-swim-team-school-music', text: 'Nina Protocol Release ↗', title: 'Listen & Purchase Digital' },
+                { type: 'link', url: 'https://ctx.metalabel.com/record_o4h34ct3shbts3az7?variantId=1', text: 'Metalabel Release ↗', title: 'Get Physical CD' },
+                { type: 'link', url: 'https://drive.google.com/file/d/1HGGqUP_SWc_mhqqt-VI2bdrDoG2FSLoK/view', text: 'View Project Proposal ↗', title: 'Initial Project Proposal' },
+                { type: 'text', content: `"Spring Has Come" by Rockie Rode and CSA Vocal and Band
+- Written by Cate Osborne
+- Performed by vocal and rock students at the New York City Charter School of the Arts
+- Vocals by Danielle Cohen, Maya Spencer, Ninamarie Jenkins, Christina Ramos, Kaylee Metzger, Hailey Nesbitt, Trinity Onyemelukwe, Maiha Santana, Oriana Lasky, Skylar Morris, Chelsea Santiago, Julian Tramantano, Zach Alin, Miles Rhinehart-Williams
+- Drums: Abraham Magnus, Bass: Emily Hough, Lead Guitar: Anahid Hekinian, Rhythm Guitar: River James Tucker, Acoustic Guitar: Summer Bayot, Tambourine: Peythyn Hall, Keys: Cate Osborne
+- Special thanks to Band Teacher Ruaridh Pattison, Vocal Arts Teacher: Christina Swanson Executive Director Andrea d'Amato, Co-Founder and Artistic Director: Dr. Geoffrey Kiorpes, Director of Ensembles: Erin Krellenstein, Director of Administration: Aengus Ortiz
+
+"Suburban Hell" by Gowanus River Swim Team
+- Written by Assaf Feinstein, Joseph Jones, Lee Clark-Gercke, Max Pnini, Sophie Won
+- Vocals: Lee Clarke-Gercke, Drums: Assaf Feinstein, Bass and Background Vocals: Max Pnini, Lead Guitar: Sophie Won, Keys: Joseph Jones
+
+School Music was recorded at Sound Collective by Stephen Kurpiis
+Mixed and mastered by Sound Collective
+Creative direction by Phillip Pyle
+Design by Sadie Grey Strosser
+Production support provided by Culture Therapy and Public Works Alliance
+Special thanks to LEFTI & Ricky Furniss (Sound Collective) and Josh Margolis & Dakota Lopez (Gowanus Music Club)`, title: 'Collaborators' },
+                { type: 'image', src: 'sonarium/school music/collage1.png', title: 'School Music' },
+                { type: 'image', src: 'sonarium/school music/collage2.png', title: 'School Music' }
             ],
             'mental-magazine': [
                 { type: 'link', url: 'https://drive.google.com/file/d/1HPcnqWij53DcE9KbVvxlAKHkOh5RovJi/view?usp=drive_link', text: 'View Full PDF ↗', title: 'MENTAL Magazine PDF' },
@@ -2362,8 +2381,31 @@ class CardStackSystem {
                 card.classList.add('card-text');
                 const textTitle = document.createElement('h3');
                 textTitle.textContent = item.title;
+                
+                // Split content to separate description and date
+                const contentParts = item.content.split('\n\n');
                 const textContent = document.createElement('p');
-                textContent.textContent = item.content;
+                
+                // If there are multiple parts (description and date)
+                if (contentParts.length > 1) {
+                    // Add description
+                    const description = document.createElement('span');
+                    description.textContent = contentParts[0];
+                    textContent.appendChild(description);
+                    
+                    // Add line breaks
+                    textContent.appendChild(document.createElement('br'));
+                    textContent.appendChild(document.createElement('br'));
+                    
+                    // Add date with a class for styling
+                    const dateSpan = document.createElement('span');
+                    dateSpan.className = 'card-date';
+                    dateSpan.textContent = contentParts[1];
+                    textContent.appendChild(dateSpan);
+                } else {
+                    textContent.textContent = item.content;
+                }
+                
                 inner.appendChild(textTitle);
                 inner.appendChild(textContent);
                 
