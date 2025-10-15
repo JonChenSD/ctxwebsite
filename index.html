@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture Therapy</title>
+    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Welcome Card -->
+        <div class="welcome-card active">
+            <button class="welcome-card-close">×</button>
+            <p>Culture Therapy — an unusual and purposeful combination of words, speaks to the power and hope that come from our participation in art and creative expression for our mental health and well-being.
+                <br/>
+                <br/>
+                Welcome to our digital dreamscape.
+                Explore freely: each artifact you click reveals a glimpse of how art can help us heal.
+            </p>
+            <div class="welcome-card-links">
+                <a href="mailto:workwithus@culturetherapy.plus">work with us</a>
+                <a href="https://culturetherapy.substack.com/" target="_blank">substack ↗</a>
+                <a href="https://www.instagram.com/culturetherapy.plus/" target="_blank">instagram ↗</a>
+            </div>
+        </div>
+        
+        <div class="plants">
+        <!-- Grass Clump 1 - Top Left -->
+        
+        <!-- Disc Player -->
+        <div class="discplayer draggable" data-type="discplayer" data-id="discplayer-1">
+            <img src="sonarium/discplayer.png" alt="Disc Player" class="discplayer-img">
+        </div>
+        
+        
+        <!-- Bookshelf -->
+        <div class="bookshelf draggable" data-type="bookshelf" data-id="bookshelf-1">
+            <img src="neighborhood_library/Bookshelf.png" alt="Bookshelf" class="bookshelf-img">
+        </div>
+        
+        <!-- Words We Love -->
+        <div class="wordswelove draggable" data-type="wordswelove" data-id="wordswelove-1">
+            <img src="wordswelove/wordswelove.png" alt="Words We Love" class="wordswelove-img">
+        </div>
+        
+        <!-- Craft Table -->
+        <div class="crafttable draggable" data-type="crafttable" data-id="crafttable-1">
+            <img src="crafttable/crafttable.png" alt="Craft Table" class="crafttable-img">
+        </div>
+        
+        <!-- CTX Mailbox -->
+        <div class="ctxmailbox draggable" data-type="ctxmailbox" data-id="ctxmailbox-1">
+            <img src="ctxmailbox/ctxmailbox.png" alt="CTX Mailbox" class="ctxmailbox-img">
+        </div>
+        
+        <!-- Animated Leaf Bushes with Flowers and Fruits -->
+        <div class="leaf-bush draggable" data-type="leaf-bush" data-id="leaf-bush-1" style="top: 10%; left: 16%;">
+            <img src="assets/Creation Tool/Natal Plum Bush Leaves 1.png" alt="Leaf Bush" class="leaf-bush-img">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 5%; left: 20%; --base-rotation: 45deg;">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 15%; left: 50%; --base-rotation: 120deg;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 60%; left: 40%;">
+        </div>
+        
+        <div class="leaf-bush draggable" data-type="leaf-bush" data-id="leaf-bush-2" style="top: 20%; left: 20%;">
+            <img src="assets/Creation Tool/Natal Plum Bush Leaves 1.png" alt="Leaf Bush" class="leaf-bush-img">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 8%; left: 15%; --base-rotation: 200deg;">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 12%; left: 50%; --base-rotation: 80deg;">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 25%; left: 35%; --base-rotation: 300deg;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 70%; left: 30%;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 75%; left: 55%;">
+        </div>
+        
+        <div class="leaf-bush draggable" data-type="leaf-bush" data-id="leaf-bush-3" style="top: 55%; left: 8%;">
+            <img src="assets/Creation Tool/Natal Plum Bush Leaves 1.png" alt="Leaf Bush" class="leaf-bush-img">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 10%; left: 40%; --base-rotation: 160deg;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 65%; left: 35%;">
+        </div>
+        
+        <div class="leaf-bush draggable" data-type="leaf-bush" data-id="leaf-bush-4" style="top: 65%; left: 55%;">
+            <img src="assets/Creation Tool/Natal Plum Bush Leaves 1.png" alt="Leaf Bush" class="leaf-bush-img">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 6%; left: 30%; --base-rotation: 90deg;">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 18%; left: 55%; --base-rotation: 270deg;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 60%; left: 25%;">
+        </div>
+        
+        <div class="leaf-bush draggable" data-type="leaf-bush" data-id="leaf-bush-5" style="top: 75%; left: 35%;">
+            <img src="assets/Creation Tool/Natal Plum Bush Leaves 1.png" alt="Leaf Bush" class="leaf-bush-img">
+            <img src="assets/flower.png" alt="Flower" class="bush-flower" style="top: 12%; left: 20%; --base-rotation: 30deg;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 50%; left: 50%;">
+            <img src="assets/fruit.png" alt="Fruit" class="bush-fruit" style="top: 70%; left: 35%;">
+        </div>
+        
+        <!-- Bookshelf Modal -->
+        <div id="bookshelf-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <div class="artifact-container">
+                    <div class="artifact-cluster" data-cluster-id="mental-magazine">
+                        <!-- Cover image serves as the trigger -->
+                        <img src="neighborhood_library/Mental Magazine/mentalmagcover.png" alt="Mental Magazine Cover" class="magazine-cover cluster-cover">
+                        <!-- Additional content will be populated by JavaScript -->
+                    </div>
+                    <div class="artifact-cluster" data-cluster-id="your-way">
+                        <!-- Cover image serves as the trigger -->
+                        <img src="neighborhood_library/Your Way/yourway.png" alt="Your Way Book" class="yourway-book cluster-cover">
+                        <!-- Additional content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disc Player Modal -->
+        <div id="discplayer-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <div class="artifact-container">
+                    <div class="artifact-cluster" data-cluster-id="song-remedy">
+                        <!-- Album cover serves as the trigger -->
+                        <img src="sonarium/song remedy/song remedy.png" alt="Song Remedy Album" class="album-cover cluster-cover">
+                        <!-- Additional content will be populated by JavaScript -->
+                    </div>
+                    <div class="artifact-cluster" data-cluster-id="school-music">
+                        <!-- Album cover serves as the trigger -->
+                        <img src="sonarium/school music/School Music.png" alt="School Music Album" class="album-cover cluster-cover">
+                        <!-- Additional content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Words We Love Modal -->
+        <div id="wordswelove-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <div class="artifact-container single-artifact">
+                    <div class="artifact-cluster" data-cluster-id="words-we-love">
+                        <!-- Cover image serves as the trigger -->
+                        <img src="wordswelove/wordswelove.png" alt="Words We Love" class="wordswelove-cover cluster-cover">
+                        <!-- Additional content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    </div>
+    
+    
+
+    
+    
+   
+    <!-- Logo Animation -->
+    <div class="logo-container" id="logoContainer">
+        <img src="logo/ctxlogo.svg" alt="Culture Therapy" class="logo" id="logo">
+        <div class="eyeball-backgrounds">
+            <div class="eyeball left-eyeball" id="leftEyeball"></div>
+            <div class="eyeball right-eyeball" id="rightEyeball"></div>
+        </div>
+        <img src="logo/ctxeyes.svg" alt="Eyes" class="logo-eyes" id="logoEyes">
+        <div class="logo-heart" id="logoHeart">♥</div>
+    </div>
+
+    <!-- Floating Music Notes -->
+    <div class="floating-notes" id="floatingNotes"></div>
+
+    <!-- Music Player -->
+    <div class="music-player" id="musicPlayer">
+        <audio id="audioPlayer" preload="metadata"></audio>
+        <div class="player-controls">
+            <button class="prev-btn" id="prevBtn">⏮</button>
+            <button class="play-btn" id="playBtn">▶</button>
+            <button class="next-btn" id="nextBtn">⏭</button>
+            <div class="track-info">
+                <div class="track-title" id="trackTitle">Grounded - Root</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <div class="progress-handle" id="progressHandle"></div>
+                    </div>
+                    <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Substack Articles Panel -->
+    <div class="substack-panel" id="substackPanel">
+        <div class="substack-header">
+            <h3>Culture Therapy</h3>
+            <p>illuminating a creative culture of mental wellness</p>
+            <button class="close-substack" id="closeSubstack">×</button>
+        </div>
+        <div class="substack-articles" id="substackArticles">
+            <!-- Articles will be loaded dynamically -->
+        </div>
+        <div class="substack-footer">
+            <a href="https://culturetherapy.substack.com/" target="_blank" class="substack-link">
+                Read more on Substack →
+            </a>
+        </div>
+    </div>
+    
+    <!-- Substack Toggle Button -->
+
+    <script src="swing.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

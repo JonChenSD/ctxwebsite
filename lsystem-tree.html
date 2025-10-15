@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamscape Tree - L-System Visualization</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 50%, #90EE90 100%);
+            min-height: 100vh;
+            font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tree-container {
+            width: 600px;
+            height: 600px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tree-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #2c3e50;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .tree-stroke {
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 1px 0 rgba(255,255,255,0.35));
+        }
+
+        /* Pulse animation for energy flow */
+        @keyframes pulseFlow {
+            0% { 
+                stroke-dashoffset: 0; 
+                opacity: 0.8;
+            }
+            50% { 
+                opacity: 1;
+            }
+            100% { 
+                stroke-dashoffset: -1000; 
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🌳 Dreamscape Tree</h1>
+    <p>L-System visualization of your project structure</p>
+    
+    <div class="tree-container">
+        <svg id="lsysSvg" width="600" height="600" viewBox="-300 -300 600 600" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="controls">
+        <button onclick="renderPresetTree()">🌿 Preset Tree</button>
+        <button onclick="renderDreamscapeTree()">📁 Dreamscape Structure</button>
+        <button onclick="toggleAnimation()">⚡ Toggle Animation</button>
+        <button onclick="randomizeTree()">🎲 Randomize</button>
+    </div>
+
+    <div class="info">
+        <h3>About This Tree</h3>
+        <p>This L-system tree represents your dreamscape project structure. Each branch corresponds to a folder, and each leaf represents a file. The pulsing energy shows the flow of creativity through your project.</p>
+        <p><strong>Colors:</strong> Pink = Audio, Green = Visual, Orange = Fonts, Blue = HTML, Purple = Code, Yellow = Text</p>
+    </div>
+
+    <script>
+        // L-System Tree Renderer
+        class LSystemRenderer {
+            constructor(svgElement) {
+                this.svg = svgElement;
+                this.animationEnabled = true;
+                if (!this.svg) {
+                    console.log('❌ L-system: SVG element not found');
+                    return;
+                }
+                console.log('🌳 L-system: Initializing...');
+                this.initDefs();
+                this.renderDreamscapeTree();
+            }
+            
+            initDefs() {
+                const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+                
+                // Static rainbow gradient
+                const grad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+                grad.setAttribute('id','lsysRainbow');
+                grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
+                grad.setAttribute('x2','100%'); grad.setAttribute('y2','0%');
+                const colors = ['#ff6ec7','#ffae00','#e5ff00','#00ffa6','#00b3ff','#9e6bff'];
+                const offsets = ['0%','20%','40%','60%','80%','100%'];
+                for (let i=0;i<offsets.length;i++) {
+                    const s = document.createElementNS('http://www.w3.org/2000/svg','stop');
+                    s.setAttribute('offset', offsets[i]);
+                    s.setAttribute('stop-color', colors[i]);
+                    grad.appendChild(s);
+                }
+                defs.appendChild(grad);
+                
+                // Simple pulsing gradient for energy flow
+                const pulseGrad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+                pulseGrad.setAttribute('id','lsysPulse');
+                pulseGrad.setAttribute('x1','0%'); pulseGrad.setAttribute('y1','0%');
+                pulseGrad.setAttribute('x2','100%'); pulseGrad.setAttribute('y2','0%');
+                
+                const pulseStops = [
+                    { offset: '0%', color: '#ffffff', opacity: '0' },
+                    { offset: '30%', color: '#ff6ec7', opacity: '0.9' },
+                    { offset: '50%', color: '#ffffff', opacity: '1' },
+                    { offset: '70%', color: '#9e6bff', opacity: '0.9' },
+                    { offset: '100%', color: '#ffffff', opacity: '0' }
+                ];
+                
+                pulseStops.forEach(stop => {
+                    const s = document.createElementNS('http://www.w3.org/2000/svg','stop');
+                    s.setAttribute('offset', stop.offset);
+                    s.setAttribute('stop-color', stop.color);
+                    s.setAttribute('stop-opacity', stop.opacity);
+                    pulseGrad.appendChild(s);
+                });
+                defs.appendChild(pulseGrad);
+                
+                this.svg.appendChild(defs);
+                console.log('🌳 L-system: Gradient definitions added');
+            }
+            
+            renderPresetTree() {
+                // Clear any existing content
+                this.svg.innerHTML = '';
+                this.initDefs();
+                
+                // A simpler L-system for visibility
+                const iterations = 3;
+                const angleDeg = 30;
+                const step = 40;
+                const decay = 0.7;
+                const axiom = 'F';
+                const rules = new Map([
+                    ['F','F[+F]F[-F]F']
+                ]);
+                
+                const seq = this.expand(axiom, rules, iterations);
+                console.log('🌳 L-system: Generated sequence:', seq.substring(0, 100) + '...');
+                this.turtle(seq, angleDeg*Math.PI/180, step, decay);
+                console.log('🌳 L-system tree rendered with', this.svg.children.length, 'elements');
+            }
+            
+            renderDreamscapeTree() {
+                const realDreamscape = {
+                    name: 'dreamscape',
+                    children: [
+                        {
+                            name: 'sonarium',
+                            children: [
+                                {
+                                    name: 'song remedy',
+                                    children: [
+                                        { name: 'Grounded - Root.mp3', type: 'audio' },
+                                        { name: 'I Feel - Sacral.mp3', type: 'audio' },
+                                        { name: 'I Speak - Throat.mp3', type: 'audio' },
+                                        { name: 'Love Is - Heart.mp3', type: 'audio' },
+                                        { name: 'On Purpose - Solar Plexus.mp3', type: 'audio' }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: 'logo',
+                            children: [
+                                { name: 'ctxlogo.svg', type: 'visual' },
+                                { name: 'ctxeyes.svg', type: 'visual' },
+                                { name: 'ctxlefteyebackground.svg', type: 'visual' },
+                                { name: 'ctxrighteyebackground.svg', type: 'visual' }
+                            ]
+                        },
+                        {
+                            name: 'fonts',
+                            children: [
+                                { name: 'GT-Pressura-Standard-Regular.woff2', type: 'font' },
+                                { name: 'GT-Pressura-Standard-Regular-Italic.woff2', type: 'font' },
+                                { name: 'GT-Pressura-Standard-Medium.woff2', type: 'font' },
+                                { name: 'GT-Pressura-Standard-Medium-Italic.woff2', type: 'font' },
+                                { name: 'GT-Maru-Bold.otf', type: 'font' },
+                                { name: 'GT-Maru-Bold-Oblique.otf', type: 'font' },
+                                { name: 'GT-Maru-Mega-Mini.otf', type: 'font' },
+                                { name: 'GT-Maru-Mega-Mini-Shaded.otf', type: 'font' },
+                                { name: 'GT-Maru-Mega-Mini-Outline.otf', type: 'font' },
+                                { name: 'GT-Maru-Mega-Mini-Glow.otf', type: 'font' },
+                                { name: 'GT-Maru-Mega-Mini-Outline-Glow.otf', type: 'font' },
+                                { name: 'GT-Maru-Mega-Mini-Outline-Shaded-Glow.otf', type: 'font' }
+                            ]
+                        },
+                        {
+                            name: 'assets',
+                            children: []
+                        },
+                        {
+                            name: 'index.html',
+                            type: 'html'
+                        },
+                        {
+                            name: 'script.js',
+                            type: 'code'
+                        },
+                        {
+                            name: 'styles.css',
+                            type: 'code'
+                        },
+                        {
+                            name: 'lsystem-tree.html',
+                            type: 'html'
+                        }
+                    ]
+                };
+                
+                this.renderFromFolderTree(realDreamscape);
+            }
+            
+            renderFromFolderTree(root){
+                if (!root || !Array.isArray(root.children)) {
+                    console.log('❌ L-system: invalid folder tree');
+                    return;
+                }
+                // Clear and re-init
+                this.svg.innerHTML = '';
+                this.initDefs();
+                
+                // Create different groups for different types
+                const trunkGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+                trunkGroup.setAttribute('stroke','url(#lsysRainbow)');
+                trunkGroup.setAttribute('class','lsys-stroke');
+                trunkGroup.setAttribute('stroke-width','8');
+                this.svg.appendChild(trunkGroup);
+
+                const branchGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+                branchGroup.setAttribute('stroke','url(#lsysRainbow)');
+                branchGroup.setAttribute('class','lsys-stroke');
+                branchGroup.setAttribute('stroke-width','6');
+                this.svg.appendChild(branchGroup);
+
+                const leafGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+                leafGroup.setAttribute('stroke','url(#lsysRainbow)');
+                leafGroup.setAttribute('class','lsys-stroke');
+                leafGroup.setAttribute('stroke-width','3');
+                this.svg.appendChild(leafGroup);
+
+                const paths = [];
+                const draw = (x1,y1,x2,y2,w, group, nodeInfo = null)=>{
+                    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+                    p.setAttribute('d',`M ${x1} ${y1} L ${x2} ${y2}`);
+                    p.setAttribute('stroke-width', String(Math.max(2,w)));
+                    
+                    // Add contextual styling based on node type
+                    if (nodeInfo) {
+                        if (nodeInfo.type === 'audio') {
+                            p.setAttribute('stroke', '#ff6ec7');
+                            p.setAttribute('opacity', '0.9');
+                        } else if (nodeInfo.type === 'visual') {
+                            p.setAttribute('stroke', '#00ffa6');
+                            p.setAttribute('opacity', '0.8');
+                        } else if (nodeInfo.type === 'font') {
+                            p.setAttribute('stroke', '#ffae00');
+                            p.setAttribute('opacity', '0.8');
+                        } else if (nodeInfo.type === 'html') {
+                            p.setAttribute('stroke', '#00b3ff');
+                            p.setAttribute('opacity', '0.8');
+                        } else if (nodeInfo.type === 'code') {
+                            p.setAttribute('stroke', '#9e6bff');
+                            p.setAttribute('opacity', '0.8');
+                        } else if (nodeInfo.type === 'text') {
+                            p.setAttribute('stroke', '#e5ff00');
+                            p.setAttribute('opacity', '0.8');
+                        }
+                    }
+                    
+                    group.appendChild(p);
+                    paths.push(p);
+                };
+
+                // Parameters
+                const trunkStep = 60;
+                const decay = 0.7;
+                const baseAngle = 30 * Math.PI/180;
+                const trunkWidth = 10;
+
+                // Trunk: one segment per top-level child
+                let x = 0, y = 180; // start toward bottom of viewBox
+                let len = trunkStep;
+                let width = trunkWidth;
+                const topLevel = root.children;
+                const trunkAnchors = [];
+                
+                // Draw main trunk
+                for (let i=0;i<topLevel.length;i++){
+                    const nx = x;
+                    const ny = y - len;
+                    draw(x,y,nx,ny,width, trunkGroup);
+                    trunkAnchors.push({x:nx, y:ny, node: topLevel[i]});
+                    y = ny;
+                    len *= decay;
+                    width *= decay;
+                }
+
+                // Branch recursively from each anchor into its corresponding folder
+                const recurse = (node, ox, oy, heading, segLen, segWidth, depth, parentGroup) => {
+                    if (!node || !Array.isArray(node.children) || node.children.length===0) return;
+                    
+                    const count = node.children.length;
+                    const span = Math.min(Math.PI/1.5, baseAngle * Math.max(1.5, count-1));
+                    const start = heading - span/2;
+                    
+                    for (let i=0;i<count;i++){
+                        const th = start + (span/(Math.max(1,count-1))) * i;
+                        const tx = ox + Math.cos(th)*segLen;
+                        const ty = oy + Math.sin(th)*segLen;
+                        
+                        // Choose group based on depth and type
+                        let currentGroup = parentGroup;
+                        if (depth === 1) currentGroup = branchGroup;
+                        if (depth >= 2) currentGroup = leafGroup;
+                        
+                        draw(ox,oy,tx,ty,segWidth, currentGroup, node.children[i]);
+                        recurse(node.children[i], tx, ty, th, segLen*decay, segWidth*decay, depth+1, currentGroup);
+                    }
+                };
+
+                for (let i=0;i<topLevel.length;i++){
+                    const anchor = trunkAnchors[i];
+                    recurse(topLevel[i], anchor.x, anchor.y, -Math.PI/2, trunkStep*0.8, trunkWidth*0.7, 1, trunkGroup);
+                }
+
+                // Add pulsing energy effect to folder tree
+                if (this.animationEnabled) {
+                    this.addPulseEffect(paths);
+                }
+
+                console.log('🌳 L-system: dreamscape structure rendered. Top-level folders:', topLevel.length);
+                console.log('   • Trunk segments:', trunkAnchors.length);
+                console.log('   • Total paths:', paths.length);
+            }
+            
+            expand(axiom, rules, n){
+                let s = axiom;
+                for(let i=0;i<n;i++){
+                    let next='';
+                    for(const ch of s){
+                        next += rules.get(ch) || ch;
+                    }
+                    s = next;
+                }
+                return s;
+            }
+            
+            turtle(sequence, angle, step, decay){
+                let x=0, y=0, heading=-Math.PI/2; // up
+                let len=step; let width=6;
+                const stack=[];
+                let segmentCount = 0;
+                const paths = [];
+                
+                const group = document.createElementNS('http://www.w3.org/2000/svg','g');
+                group.setAttribute('stroke','url(#lsysRainbow)');
+                group.setAttribute('class','lsys-stroke');
+                this.svg.appendChild(group);
+                
+                const drawSeg=(x1,y1,x2,y2,w)=>{
+                    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+                    p.setAttribute('d',`M ${x1} ${y1} L ${x2} ${y2}`);
+                    p.setAttribute('stroke-width', String(Math.max(2,w)));
+                    group.appendChild(p);
+                    paths.push(p);
+                    segmentCount++;
+                };
+                
+                for(const ch of sequence){
+                    if(ch==='F'){
+                        const nx = x + Math.cos(heading)*len;
+                        const ny = y + Math.sin(heading)*len;
+                        drawSeg(x,y,nx,ny,width);
+                        x=nx; y=ny; len*=decay; width*=decay;
+                    } else if(ch==='+') { heading += angle; }
+                    else if(ch==='-') { heading -= angle; }
+                    else if(ch==='['){ stack.push({x,y,heading,len,width}); }
+                    else if(ch===']'){
+                        const st = stack.pop(); if(!st) continue;
+                        x=st.x; y=st.y; heading=st.heading; len=st.len; width=st.width;
+                    }
+                }
+                
+                // Add pulsing energy effect to some paths
+                if (this.animationEnabled) {
+                    this.addPulseEffect(paths);
+                }
+                
+                console.log('🌳 L-system: Drew', segmentCount, 'segments');
+            }
+            
+            addPulseEffect(paths) {
+                // Add pulsing effect to every 2nd path for more coverage
+                paths.forEach((path, index) => {
+                    if (index % 2 === 0) {
+                        const length = path.getTotalLength();
+                        const pulseLength = Math.min(30, length * 0.4);
+                        
+                        // Create a copy of the path for the pulse effect
+                        const pulsePath = path.cloneNode(true);
+                        pulsePath.setAttribute('stroke', 'url(#lsysPulse)');
+                        pulsePath.setAttribute('stroke-width', String(parseFloat(path.getAttribute('stroke-width')) * 1.2));
+                        pulsePath.setAttribute('stroke-dasharray', `${pulseLength} ${length}`);
+                        pulsePath.setAttribute('stroke-dashoffset', '0');
+                        pulsePath.setAttribute('opacity', '0.8');
+                        
+                        // Insert the pulse path after the original
+                        path.parentNode.insertBefore(pulsePath, path.nextSibling);
+                        
+                        // One direction only - from start to end
+                        const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                        animate.setAttribute('attributeName', 'stroke-dashoffset');
+                        animate.setAttribute('values', `${length + pulseLength}; -${pulseLength}`);
+                        animate.setAttribute('dur', `${6 + Math.random() * 3}s`);
+                        animate.setAttribute('repeatCount', 'indefinite');
+                        animate.setAttribute('begin', `${Math.random() * 4}s`);
+                        pulsePath.appendChild(animate);
+                        
+                        console.log(`🌳 Added pulse to path ${index}, length: ${length.toFixed(1)}`);
+                    }
+                });
+            }
+        }
+
+        // Initialize the tree
+        let treeRenderer;
+        document.addEventListener('DOMContentLoaded', () => {
+            treeRenderer = new LSystemRenderer(document.getElementById('lsysSvg'));
+        });
+
+        // Control functions
+        function renderPresetTree() {
+            if (treeRenderer) treeRenderer.renderPresetTree();
+        }
+
+        function renderDreamscapeTree() {
+            if (treeRenderer) treeRenderer.renderDreamscapeTree();
+        }
+
+        function toggleAnimation() {
+            if (treeRenderer) {
+                treeRenderer.animationEnabled = !treeRenderer.animationEnabled;
+                console.log('Animation enabled:', treeRenderer.animationEnabled);
+                // Re-render current tree
+                if (treeRenderer.animationEnabled) {
+                    renderDreamscapeTree();
+                }
+            }
+        }
+
+        function randomizeTree() {
+            if (treeRenderer) {
+                // Generate a random L-system
+                const iterations = 2 + Math.floor(Math.random() * 3);
+                const angleDeg = 20 + Math.random() * 40;
+                const step = 30 + Math.random() * 30;
+                const decay = 0.6 + Math.random() * 0.3;
+                
+                const axiom = 'F';
+                const rules = new Map([
+                    ['F','F[+F]F[-F]F']
+                ]);
+                
+                treeRenderer.svg.innerHTML = '';
+                treeRenderer.initDefs();
+                const seq = treeRenderer.expand(axiom, rules, iterations);
+                treeRenderer.turtle(seq, angleDeg*Math.PI/180, step, decay);
+                console.log('🌳 Random tree generated');
+            }
+        }
+    </script>
+</body>
+</html>

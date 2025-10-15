@@ -1,0 +1,2481 @@
+/* Culture Therapy - Styles */
+
+/* Custom Fonts */
+@font-face {
+    font-family: 'GT Pressura';
+    src: url('fonts/GT-Pressura-Standard-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GT Pressura';
+    src: url('fonts/GT-Pressura-Standard-Regular-Italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GT Pressura';
+    src: url('fonts/GT-Pressura-Standard-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GT Pressura';
+    src: url('fonts/GT-Pressura-Standard-Medium-Italic.woff2') format('woff2');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Maru';
+    src: url('fonts/GT-Maru-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: url('assets/Background.png');
+    background-repeat: repeat-x;
+    background-size: auto 100vh;
+    background-position: top left;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* MapleStory Cursor - Normal pointer */
+    cursor: url('cursors/point.cur'), auto;
+}
+
+/* Welcome Card - Centered on screen */
+.welcome-card {
+    font-family: 'GT Pressura';
+    position: fixed;
+    top: calc(50% - 50px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    padding: 40px 50px;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 248, 220, 0.95) 0%,
+        rgba(255, 248, 220, 0.95) 100%
+    );
+    background-image: 
+        repeating-linear-gradient(
+            transparent 0px,
+            transparent 23px,
+            rgba(150, 150, 150, 0.3) 23px,
+            rgba(150, 150, 150, 0.3) 24px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(255, 248, 220, 0.95) 0%,
+            rgba(255, 248, 220, 0.95) 100%
+        );
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    border-radius: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.welcome-card.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.welcome-card-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    transition: all 0.2s ease;
+    border-radius: 0;
+}
+
+.welcome-card-close:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+}
+
+.welcome-card p {
+    color: #444;
+    line-height: 28px;
+    font-size: 18px;
+    margin: 0 0 30px 0;
+    text-align: left;
+}
+
+.welcome-card-links {
+    display: flex;
+ 
+    gap: 20px;
+    flex-wrap: wrap;
+
+    border-top: 1px solid rgba(150, 150, 150, 0.3);
+}
+
+.welcome-card-links a {
+    color: #444;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.welcome-card-links a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* MapleStory Cursor Styles */
+* {
+    cursor: url('cursors/point.cur'), auto;
+}
+
+/* Clickable elements - click cursor on hover */
+a, button, 
+.draggable, .bookshelf, .discplayer, .wordswelove, .crafttable, .ctxmailbox,
+.modal-close, .card-stack-close-btn, .card-stack-back-btn,
+.swipe-card,
+.cluster-cover,
+.magazine-cover, .album-cover, .wordswelove-cover, .yourway-book,
+.leaf-bush, .ctx-logo, .substack-toggle,
+[role="button"], [onclick] {
+    cursor: url('cursors/point.cur'), auto;
+}
+
+a:hover, button:hover, 
+.draggable:hover, .bookshelf:hover, .discplayer:hover, 
+.wordswelove:hover, .crafttable:hover, .ctxmailbox:hover,
+.modal-close:hover, .card-stack-close-btn:hover, .card-stack-back-btn:hover,
+.swipe-card:hover,
+.cluster-cover:hover,
+.magazine-cover:hover, .album-cover:hover, .wordswelove-cover:hover, .yourway-book:hover,
+.leaf-bush:hover, .ctx-logo:hover, .substack-toggle:hover,
+[role="button"]:hover, [onclick]:hover {
+    cursor: url('cursors/point_click.cur'), pointer !important;
+}
+
+/* Dragging state - grab cursor */
+.dragging {
+    cursor: url('cursors/grab.cur'), grabbing !important;
+}
+
+/* Text selection areas */
+input, textarea, [contenteditable="true"] {
+    cursor: url('cursors/point.cur'), text;
+}
+
+/* Busy/Loading state */
+body.loading, .loading {
+    cursor: url('cursors/meso_coin_gold.cur'), wait !important;
+}
+
+/* Move cursor for repositionable items */
+.ctx-logo, .substack-toggle {
+    cursor: url('cursors/point_move_blue.cur'), move !important;
+}
+
+/* Ensure the main container doesn't extend beyond viewport */
+html {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+/* Main container with fixed width and responsive height */
+.main-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    margin: 0;
+    background: none;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Responsive scaling for smaller screens */
+@media (max-width: 1920px) {
+    .main-container {
+        transform: none;
+        height: 100vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        transform: none;
+        height: 100vh;
+    }
+}
+
+/* Background image layer disabled (we tile on body instead) */
+body::before { content: none; }
+
+.plants {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.grass-clump {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+}
+
+/* Grass Clump Positions - Top Down Scattered Layout */
+.clump-1 {
+    top: 15%;
+    left: 10%;
+    transform: rotate(-5deg);
+}
+
+.clump-2 {
+    top: 25%;
+    right: 15%;
+    transform: rotate(10deg);
+}
+
+.clump-3 {
+    bottom: 20%;
+    left: 20%;
+    transform: rotate(-15deg);
+}
+
+.clump-4 {
+    top: 10%;
+    right: 30%;
+    transform: rotate(8deg);
+}
+
+.grass-blade {
+    position: absolute;
+    width: 40px;
+    height: 500px;
+    background: linear-gradient(to bottom, #228B22, #32CD32);
+    border-radius: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform-origin: bottom center;
+    animation: windSway 3s ease-in-out infinite;
+}
+
+/* Wind animation - each blade sways at slightly different times */
+@keyframes windSway {
+    0%, 100% { 
+        transform: rotate(calc(var(--base-rotation, 0deg) + var(--wind-direction, 1) * var(--wind-strength, 1) * 0deg)); 
+    }
+    25% { 
+        transform: rotate(calc(var(--base-rotation, 0deg) + var(--wind-direction, 1) * var(--wind-strength, 1) * 2deg)); 
+    }
+    50% { 
+        transform: rotate(calc(var(--base-rotation, 0deg) + var(--wind-direction, 1) * var(--wind-strength, 1) * -1deg)); 
+    }
+    75% { 
+        transform: rotate(calc(var(--base-rotation, 0deg) + var(--wind-direction, 1) * var(--wind-strength, 1) * 1.5deg)); 
+    }
+}
+
+/* Individual grass blades with different sizes, rotations, and wind delays */
+.blade-1 {
+    width: 8px;
+    height: 60px;
+    left: 50px;
+    top: 140px;
+    --base-rotation: -15deg;
+    animation-delay: 0s;
+}
+
+.blade-2 {
+    width: 6px;
+    height: 45px;
+    left: 60px;
+    top: 150px;
+    --base-rotation: 10deg;
+    animation-delay: 0.3s;
+}
+
+.blade-3 {
+    width: 10px;
+    height: 70px;
+    left: 70px;
+    top: 130px;
+    --base-rotation: -5deg;
+    animation-delay: 0.6s;
+}
+
+.blade-4 {
+    width: 7px;
+    height: 55px;
+    left: 80px;
+    top: 145px;
+    --base-rotation: 20deg;
+    animation-delay: 0.9s;
+}
+
+.blade-5 {
+    width: 9px;
+    height: 65px;
+    left: 90px;
+    top: 135px;
+    --base-rotation: -10deg;
+    animation-delay: 1.2s;
+}
+
+.blade-6 {
+    width: 6px;
+    height: 50px;
+    left: 100px;
+    top: 150px;
+    --base-rotation: 15deg;
+    animation-delay: 1.5s;
+}
+
+.blade-7 {
+    width: 8px;
+    height: 58px;
+    left: 110px;
+    top: 140px;
+    --base-rotation: -20deg;
+    animation-delay: 1.8s;
+}
+
+.blade-8 {
+    width: 7px;
+    height: 52px;
+    left: 120px;
+    top: 148px;
+    --base-rotation: 5deg;
+    animation-delay: 2.1s;
+}
+
+/* Natal Plum Bush - Using single PNG image */
+.plum-bush {
+    position: absolute;
+    top: 40%;
+    left: 25%;
+    width: 224px;
+    height: 221px;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.plum-bush-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    transition: filter 0.3s ease;
+}
+
+.plum-bush:hover .plum-bush-svg {
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Bookshelf */
+.bookshelf {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    width: 290px;
+    height: 412px;
+    cursor: pointer;
+    z-index: 50;
+}
+
+.wordswelove {
+    position: absolute;
+    top: 60%;
+    left: 75%;
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+    z-index: 50;
+}
+
+.wordswelove-img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.wordswelove:hover .wordswelove-img {
+    transform: scale(1.05);
+}
+
+.wordswelove-cover {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.wordswelove-cover:hover {
+    transform: scale(1.05);
+}
+
+.crafttable {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 400px;
+    height: auto;
+    cursor: pointer;
+    z-index: 50;
+}
+
+.crafttable-img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.crafttable:hover .crafttable-img {
+    transform: scale(1.05);
+}
+
+.ctxmailbox {
+    position: absolute;
+    top: 20%;
+    left: 60%;
+    width: 120px;
+    height: auto;
+    cursor: pointer;
+    z-index: 50;
+}
+
+.ctxmailbox-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.ctxmailbox:hover .ctxmailbox-img {
+    transform: scale(1.05);
+}
+
+.discplayer {
+    position: absolute;
+    top: 20%;
+    left: 70%;
+    width: 220px;
+    height: auto;
+    cursor: pointer;
+    z-index: 40;
+}
+
+.discplayer-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    transition: filter 0.3s ease;
+}
+
+.discplayer:hover .discplayer-img {
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Album Gallery */
+/* Old album-gallery, album-container, album-img, and album-reflection styles removed - now using unified artifact-container */
+
+.bookshelf-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    transition: filter 0.3s ease;
+}
+
+.bookshelf:hover .bookshelf-img {
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Animated Leaf Bush */
+.leaf-bush {
+    position: absolute;
+    top: 60%;
+    left: 60%;
+    width: 221px;
+    height: 198px;
+    cursor: pointer;
+    z-index: 5;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+
+
+.leaf-bush-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    transition: filter 0.3s ease, opacity 0.2s ease;
+}
+
+.leaf-bush:hover .leaf-bush-img {
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Bush Flowers and Fruits */
+.bush-flower, .bush-fruit {
+    position: absolute;
+    object-fit: contain;
+    z-index: 6;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.bush-flower {
+    width: 91px;
+    height: 91px;
+    z-index: 7; /* Flowers on top of fruits */
+    transform-origin: center center;
+}
+
+/* Idle flower rotation - stop-motion swaying */
+@keyframes flowerIdleRotation {
+    0% { transform: rotate(var(--base-rotation, 0deg)); }
+    25% { transform: rotate(calc(var(--base-rotation, 0deg) + 15deg)); }
+    50% { transform: rotate(var(--base-rotation, 0deg)); }
+    75% { transform: rotate(calc(var(--base-rotation, 0deg) - 15deg)); }
+    100% { transform: rotate(var(--base-rotation, 0deg)); }
+}
+
+/* Music-reactive flower rotation - stop-motion clockwise */
+@keyframes flowerMusicRotation {
+    0% { transform: rotate(var(--base-rotation, 0deg)); }
+    25% { transform: rotate(calc(var(--base-rotation, 0deg) + 90deg)); }
+    50% { transform: rotate(calc(var(--base-rotation, 0deg) + 180deg)); }
+    75% { transform: rotate(calc(var(--base-rotation, 0deg) + 270deg)); }
+    100% { transform: rotate(calc(var(--base-rotation, 0deg) + 360deg)); }
+}
+
+/* Music playing state */
+.bush-flower.music-playing {
+    animation: flowerMusicRotation 4s steps(4, end) infinite;
+}
+
+/* Idle state - stop-motion timing */
+.bush-flower:not(.music-playing) {
+    animation: flowerIdleRotation 4s steps(4, end) infinite;
+}
+
+.bush-fruit {
+    width: 41px;
+    height: 42px;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+/* Fruit falling animation - constant velocity, slower spin */
+@keyframes fruitFall {
+    0% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: translateY(var(--fall-distance, 100px)) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+/* Fruit fade out animation */
+@keyframes fruitFadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Fruit reappear animation */
+@keyframes fruitReappear {
+    0% { 
+        opacity: 0;
+        transform: translateY(var(--fall-distance, 100px)) rotate(180deg);
+    }
+    100% { 
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+/* Fruit states */
+.bush-fruit.falling {
+    animation: fruitFall 1.2s linear forwards;
+}
+
+.bush-fruit.fading {
+    animation: fruitFadeOut 0.5s linear forwards;
+}
+
+.bush-fruit.reappearing {
+    animation: fruitReappear 0.5s linear forwards;
+}
+
+.leaf-bush:hover .bush-flower,
+.leaf-bush:hover .bush-fruit {
+    transform: scale(1.1);
+}
+
+/* Reusable Modal Component */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+ 
+    padding: 0;
+    border: none;
+ 
+
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4));
+    background: transparent;
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #8B4513;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10001;
+    transition: color 0.3s ease;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    color: #654321;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+}
+
+.bookshelf-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookshelf-background {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookshelf-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+}
+
+.artifact-container {
+    position: absolute;
+    top: 0; /* Below close button */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+    grid-template-rows: 1fr; /* 1 row for 2 items */
+
+
+    z-index: 2;
+}
+
+/* Single artifact container (for items with only one cluster) */
+.artifact-container.single-artifact {
+    grid-template-columns: 1fr; /* 1 column */
+}
+
+/* Artifact cluster styling for grid layout */
+.artifact-cluster {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.artifact-cluster:hover {
+    transform: scale(1.02);
+}
+
+/* Container for expanded cluster content */
+.cluster-content-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+/* Individual artifact components within the cluster */
+.artifact-component {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    padding: 15px;
+    color: white;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.artifact-component.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.artifact-component:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Text artifact components styled as lined notecards */
+.artifact-component.text-card {
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 248, 220, 0.95) 0%,
+        rgba(255, 248, 220, 0.95) 100%
+    );
+    background-size: 100% 24px;
+    background-position: 0 0;
+    background-image: 
+        repeating-linear-gradient(
+            transparent 0px,
+            transparent 23px,
+            rgba(150, 150, 150, 0.3) 23px,
+            rgba(150, 150, 150, 0.3) 24px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(255, 248, 220, 0.95) 0%,
+            rgba(255, 248, 220, 0.95) 100%
+        );
+    border: 1px solid rgba(200, 180, 140, 0.6);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 24px 20px;
+}
+
+.magazine-cover,
+.yourway-book,
+.album-cover {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.magazine-cover:hover,
+.yourway-book:hover,
+.album-cover:hover {
+    transform: scale(1.05);
+}
+
+
+/* Speakers */
+.speakers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.speaker {
+    position: absolute;
+    top: 20%;
+    left: 60%;
+    width: 120px;
+    height: 200px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+    transform: perspective(400px) rotateX(-30deg) rotateY(-30deg);
+    z-index: 15;
+}
+
+.speaker-body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* Front face */
+.speaker-front {
+    position: absolute;
+    width: 60px;
+    height: 110px;
+    background: #2C2C2C;
+    border: 2px solid #555;
+    transform: translateZ(30px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Bottom face */
+.speaker-bottom {
+    position: absolute;
+    width: 62px;
+    height: 58px;
+    background: #1A1A1A;
+    border: 2px solid #555;
+    border-left: none;
+    transform: rotatex(-90deg) translateZ(82px);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Top face - lowered and angular, no rotation */
+.speaker-top {
+    position: absolute;
+    width: 62px;
+    height: 58px;
+    background: #1A1A1A;
+    border: 2px solid #555;
+    border-left: none;
+    transform: rotatex(-90deg) translateZ(-31px);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Left side face */
+.speaker-left {
+    position: absolute;
+    width: 60px;
+    height: 110px;
+    background: #1A1A1A;
+    border: 2px solid #555;
+    border-right: none;
+    transform: rotateY(90deg) translateZ(-29px);
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Right side face */
+.speaker-right {
+    position: absolute;
+    width: 60px;
+    height: 110px;
+    background: #1A1A1A;
+    border: 2px solid #555;
+    border-left: none;
+    transform: rotateY(-90deg) translateZ(-32px);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Back face */
+.speaker-back {
+    position: absolute;
+    width: 60px;
+    height: 110px;
+    background: #1A1A1A;
+    border: 2px solid #555;
+    transform: translateZ(-30px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Speaker drivers - positioned on front face */
+.speaker-tweeter {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.speaker-woofer {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 48px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+/* Speaker cone details */
+.speaker-tweeter::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, #666 30%, #444 70%);
+    border-radius: 0;
+}
+
+.speaker-woofer::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    background: radial-gradient(circle, #666 30%, #444 70%);
+    border-radius: 0;
+}
+
+.speaker:hover {
+    transform: scale(1.05);
+}
+
+/* Second speaker with independent perspective */
+.speaker-2 {
+    position: absolute;
+    top: 30%;
+    left: 70%;
+    width: 60px;
+    height: 100px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+    transform: perspective(400px) rotateX(-30deg) rotateY(-55deg);
+}
+
+.speaker-2:hover {
+    transform: perspective(400px) rotateX(-30deg) rotateY(-30deg) scale(1.05);
+}
+
+/* Rocks */
+.rocks {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.rock {
+    position: absolute;
+    width: 160px;
+    height: 120px;
+    background: linear-gradient(135deg, #6B6B6B, #8A8A8A, #5A5A5A);
+    border-radius: 0;
+    box-shadow: 
+        inset -10px -10px 20px rgba(0, 0, 0, 0.3),
+        inset 10px 10px 20px rgba(255, 255, 255, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.rock::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0.5px, transparent 0.5px);
+    background-size: 3px 3px, 4px 4px, 2px 2px;
+    background-position: 0 0, 1px 1px, 2px 2px;
+    opacity: 0.6;
+    mix-blend-mode: overlay;
+}
+
+.rock-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(100, 100, 100, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(120, 120, 120, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 40% 80%, rgba(80, 80, 80, 0.4) 0%, transparent 30%);
+    border-radius: 0;
+}
+
+.rock-highlight {
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    width: 30%;
+    height: 20%;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    border-radius: 0;
+    filter: blur(2px);
+}
+
+/* Rock 1 - Large boulder */
+.rock-1 {
+    width: 80px;
+    height: 60px;
+    top: 20%;
+    left: 15%;
+    border-radius: 0;
+    transform: rotate(-15deg);
+}
+
+/* Rock 2 - Medium stone */
+.rock-2 {
+    width: 50px;
+    height: 40px;
+    top: 60%;
+    right: 20%;
+    border-radius: 0;
+    transform: rotate(25deg);
+}
+
+/* Rock 3 - Small pebble */
+.rock-3 {
+    width: 25px;
+    height: 20px;
+    top: 40%;
+    left: 60%;
+    border-radius: 0;
+    transform: rotate(45deg);
+}
+
+/* Rock 4 - Small pebble */
+.rock-4 {
+    width: 30px;
+    height: 25px;
+    bottom: 30%;
+    right: 40%;
+    border-radius: 0;
+    transform: rotate(-30deg);
+}
+
+/* Rock 5 - Medium stone */
+.rock-5 {
+    width: 45px;
+    height: 35px;
+    top: 70%;
+    left: 40%;
+    border-radius: 0;
+    transform: rotate(60deg);
+}
+
+/* Pond styles */
+.ponds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.pond {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    width: 300px;
+    height: 150px;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 15;
+}
+
+/* Organic blob shape using clip-path */
+.pond-water {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        #3b82f6 0%, 
+        #60a5fa 25%, 
+        #93c5fd 50%, 
+        #60a5fa 75%, 
+        #3b82f6 100%);
+    clip-path: polygon(
+        20% 0%, 
+        40% 5%, 
+        60% 0%, 
+        80% 10%, 
+        95% 25%, 
+        100% 45%, 
+        95% 65%, 
+        85% 80%, 
+        70% 90%, 
+        50% 95%, 
+        30% 90%, 
+        15% 80%, 
+        5% 65%, 
+        0% 45%, 
+        5% 25%, 
+        10% 10%
+    );
+    border-radius: 0;
+    box-shadow: 
+        inset 0 10px 20px rgba(59, 130, 246, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Water reflection effect */
+.pond-reflection {
+    position: absolute;
+    top: 10%;
+    left: 20%;
+    width: 60%;
+    height: 30%;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%);
+    clip-path: polygon(
+        0% 0%, 
+        100% 0%, 
+        90% 100%, 
+        10% 100%
+    );
+    border-radius: 0;
+    animation: waterShimmer 3s ease-in-out infinite;
+}
+
+/* Ripples animation */
+.pond-ripples {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    animation: ripple 2s ease-out infinite;
+    clip-path: polygon(
+        20% 0%, 
+        40% 5%, 
+        60% 0%, 
+        80% 10%, 
+        95% 25%, 
+        100% 45%, 
+        95% 65%, 
+        85% 80%, 
+        70% 90%, 
+        50% 95%, 
+        30% 90%, 
+        15% 80%, 
+        5% 65%, 
+        0% 45%, 
+        5% 25%, 
+        10% 10%
+    );
+}
+
+.pond-ripples::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -15px;
+    width: 60px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    animation: ripple 2s ease-out infinite 0.5s;
+}
+
+.pond-ripples::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -30px;
+    width: 90px;
+    height: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    animation: ripple 2s ease-out infinite 1s;
+}
+
+/* Water animations */
+@keyframes waterShimmer {
+    0%, 100% { opacity: 0.6; transform: translateY(0px); }
+    50% { opacity: 0.8; transform: translateY(-2px); }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Draggable System */
+.draggable {
+    cursor: grab;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    user-select: none;
+}
+
+.draggable:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+}
+
+.draggable.dragging {
+    cursor: grabbing;
+    opacity: 0.8;
+    transform: scale(1.05);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Individual draggable items */
+.grass-clump, .rock, .speaker, .pond {
+    pointer-events: auto;
+}
+
+/* Logo Animation */
+.logo-container {
+    position: fixed;
+    bottom: calc(50% - 200px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    pointer-events: all;
+    opacity: 1;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Logo positioned at welcome card when card is active */
+.welcome-card.active ~ .plants .logo-container,
+body:has(.welcome-card.active) .logo-container {
+    bottom: calc(50% - 200px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Logo moves to bottom left when welcome card closes */
+.logo-container.moved-to-corner {
+    bottom: 20px;
+    left: 20px;
+    transform: translateX(0);
+}
+
+.logo {
+    width: 177px;
+    height: 69px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.eyeball-backgrounds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 177px;
+    height: 69px;
+    pointer-events: none;
+    z-index: 0.5;
+    transform-origin: center center;
+}
+
+.eyeball {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    transform-origin: 50% 10px;
+ 
+}
+
+.left-eyeball {
+    top: 17px;
+    left: 138px;
+}
+
+.right-eyeball {
+    top: 17px;
+    left: 149px;
+}
+
+.logo-eyes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 177px;
+    height: 69px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Blinking animations */
+.right-eyeball.blink {
+    animation: quickBlink 0.15s ease-in-out;
+}
+
+.eyeball-backgrounds.blink {
+    animation: bothBlink 0.2s ease-in-out;
+}
+
+@keyframes quickBlink {
+    0% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+    100% { transform: scaleY(1); }
+}
+
+@keyframes bothBlink {
+    0% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+    100% { transform: scaleY(1); }
+}
+
+.logo-heart {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    color: #000;
+    font-size: 16px;
+    opacity: 0;
+    animation: heartFloat 0.8s ease-out 0.2s forwards;
+    pointer-events: none;
+}
+
+@keyframes heartFloat {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.5) rotate(0deg);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(15px, -20px) scale(0.8) rotate(30deg);
+    }
+}
+
+/* Wink animation when logo moves to corner */
+@keyframes wink {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+}
+
+/* Music Player */
+.music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #FF7FBD;
+    backdrop-filter: blur(10px);
+    border-radius: 0;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 10002;
+    box-shadow: 0 4px 20px rgba(245, 208, 41, 0.597);
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 280px;
+}
+
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.play-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+}
+
+.play-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.play-btn.playing {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.prev-btn, .next-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    opacity: 0.7;
+}
+
+.prev-btn:hover, .next-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Progress Bar */
+.progress-bar {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0;
+    transition: width 0.1s ease;
+    width: 0%;
+}
+
+.progress-handle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 0;
+    transform: translateY(-50%) ;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar:hover .progress-handle {
+    opacity: 1;
+}
+
+.track-title {
+    color: #fff;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.9;
+}
+
+.time-display {
+    color: #fff;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-align: left;
+    opacity: 0.7;
+}
+
+/* Floating Music Notes */
+.floating-notes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 500;
+}
+
+.music-note {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 20px;
+    font-weight: bold;
+    pointer-events: none;
+    animation: floatNote 4s ease-out forwards;
+}
+
+@keyframes floatNote {
+    0% {
+        opacity: 0.8;
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateY(-30px) translateX(20px) rotate(180deg) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px) translateX(40px) rotate(360deg) scale(0.5);
+    }
+}
+
+/* Speaker Pulse Animation */
+.speaker-tweeter.pulsing {
+    animation: speakerPulse 0.5s ease-in-out infinite alternate;
+}
+
+.speaker-woofer.pulsing {
+    animation: speakerPulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes speakerPulse {
+    0% {
+        transform: translateX(-50%) scale(1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    100% {
+        transform: translateX(-50%) scale(1.1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Substack Panel Styles */
+.substack-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    display: none; /* Force hidden by default */
+    transition: all 0.3s ease;
+    overflow: hidden;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.substack-panel.visible {
+    opacity: 1;
+    visibility: visible;
+    display: block; /* Show when visible */
+}
+
+.substack-header {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.substack-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.substack-header p {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+.close-substack {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 0;
+    transition: all 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-substack:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.substack-articles {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 16px 24px;
+}
+
+.substack-article {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.substack-article:last-child {
+    border-bottom: none;
+}
+
+.substack-article:hover {
+    background: rgba(255, 255, 255, 0.02);
+    margin: 0 -24px;
+    padding: 16px 24px;
+    border-radius: 0;
+}
+
+.substack-article h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.4;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.substack-article p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+.substack-article .article-meta {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+.substack-article a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+}
+
+.substack-article a:hover {
+    text-decoration: none;
+}
+
+.substack-footer {
+    padding: 16px 24px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.substack-link {
+    color: #32CD32;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.substack-link:hover {
+    color: #228B22;
+    text-decoration: underline;
+}
+
+.substack-toggle {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.substack-toggle:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.loading {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    padding: 40px 0;
+}
+
+/* Custom scrollbar for articles */
+.substack-articles::-webkit-scrollbar {
+    width: 6px;
+}
+
+.substack-articles::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+}
+
+.substack-articles::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+}
+
+.substack-articles::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Card Stack System Styles */
+.card-stack-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000; /* Higher than modals */
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    pointer-events: none;
+    background: transparent;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.card-stack-overlay.active {
+    display: flex;
+    pointer-events: all;
+}
+
+/* Blur/fade effect for background layers */
+body.dreamscape-blurred > *:not(.card-stack-overlay) {
+    filter: blur(8px);
+    opacity: 0.5;
+    transition: filter 0.4s ease, opacity 0.4s ease;
+    pointer-events: none;
+}
+
+/* Ensure card stack overlay is NOT affected by blur */
+.card-stack-overlay {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+.card-stack-container {
+    width: calc(100vw - 400px); /* 200px margin on each side */
+    min-height: 100vh;
+    padding: 200px 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Individual content cards - now static, not swipeable */
+.swipe-card {
+    position: relative;
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    cursor: auto;
+    width: 100%;
+    max-width: calc(100vw - 400px); /* Match container width */
+    max-height: calc(100vh - 400px); /* 200px top + 200px bottom */
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.swipe-card:nth-child(1) { animation-delay: 0.1s; }
+.swipe-card:nth-child(2) { animation-delay: 0.2s; }
+.swipe-card:nth-child(3) { animation-delay: 0.3s; }
+.swipe-card:nth-child(4) { animation-delay: 0.4s; }
+.swipe-card:nth-child(5) { animation-delay: 0.5s; }
+.swipe-card:nth-child(6) { animation-delay: 0.6s; }
+.swipe-card:nth-child(7) { animation-delay: 0.7s; }
+.swipe-card:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Image cards have no background */
+.swipe-card.card-image {
+    background: none;
+    box-shadow: none;
+}
+
+/* Enable text selection for all card content */
+.swipe-card * {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+/* Card content wrapper */
+.card-inner {
+    width: 100%;
+    height: 100%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* Image card styling */
+.swipe-card.card-image .card-inner {
+    padding: 0; /* No padding - full bleed */
+    margin: 0;
+    display: block; /* Remove flex layout */
+    position: relative; /* For title overlay */
+    text-align: center; /* Center the inline-block wrapper */
+}
+
+/* Artifact image wrapper - matches image dimensions */
+.artifact-image-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.artifact-image-wrapper img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: calc(100vw - 400px); /* 200px margin on each side */
+    max-height: calc(100vh - 400px); /* 200px top + 200px bottom */
+    object-fit: contain; /* Keep original aspect ratio */
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.swipe-card.card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: calc(100vw - 400px); /* 200px margin on each side */
+    max-height: calc(100vh - 400px); /* 200px top + 200px bottom */
+    object-fit: contain; /* Keep original aspect ratio */
+    border-radius: 0; /* Match card border radius */
+    margin: 0;
+    padding: 0;
+}
+
+/* Cover card specific styling (artifact thumbnails in expanded view) */
+.swipe-card.card-cover {
+    background: none;
+    box-shadow: none;
+}
+
+.swipe-card.card-cover .card-inner {
+    padding: 0;
+    margin: 0;
+}
+
+.swipe-card.card-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: calc(100vw - 400px);
+    max-height: calc(100vh - 400px);
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+/* Artifact title overlay */
+.artifact-title-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 2px 0px;
+    font-family: 'Maru', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    border-radius: 0;
+    background: rgb(255, 153, 0);
+    letter-spacing: 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+    pointer-events: none;
+    z-index: 10;
+    display: inline-block;
+    line-height: 1.4;
+    max-width: calc(100% - 80px);
+    -webkit-text-stroke: 2px #0099ff; /* Complementary color stroke (set dynamically in JS) */
+    text-stroke: 2px #0099ff;
+    paint-order: stroke fill;
+}
+
+.swipe-card.card-image .artifact-title-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Text card styling (lined notecard) */
+.swipe-card.card-text {
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 248, 220, 0.95) 0%,
+        rgba(255, 248, 220, 0.95) 100%
+    );
+    background-image: 
+        repeating-linear-gradient(
+            transparent 0px,
+            transparent 23px,
+            rgba(150, 150, 150, 0.3) 23px,
+            rgba(150, 150, 150, 0.3) 24px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(255, 248, 220, 0.95) 0%,
+            rgba(255, 248, 220, 0.95) 100%
+        );
+    border: 1px solid rgba(200, 180, 140, 0.6);
+}
+
+.swipe-card.card-text .card-inner {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.swipe-card.card-text h3 {
+    color: #333;
+    font-family: 'Georgia', serif;
+    line-height: 28px;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 24px 0;
+}
+
+.swipe-card.card-text p {
+    color: #444;
+    font-family: 'Georgia', serif;
+    line-height: 28px;
+    font-size: 16px;
+    margin: 0;
+    max-width: 100%;
+}
+
+/* Audio card styling */
+.swipe-card.card-audio {
+    background: #FF7FBD;
+    box-shadow: 0 4px 20px rgba(245, 208, 41, 0.597);
+}
+
+.swipe-card.card-audio .card-inner {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.swipe-card.card-audio h3 {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.swipe-card.card-audio audio {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 0;
+    border-radius: 0;
+}
+
+/* Link card styling */
+.swipe-card.card-link {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.swipe-card.card-link .card-inner {
+    color: white;
+}
+
+.swipe-card.card-link h3 {
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.swipe-card.card-link a {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.swipe-card.card-link a:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Card stack controls */
+.card-stack-controls {
+    position: fixed;
+    top: 30px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 30px;
+    z-index: 10001;
+    pointer-events: none;
+}
+
+.card-stack-controls > * {
+    pointer-events: auto;
+}
+
+.card-stack-back-section {
+    position: absolute;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.card-stack-title {
+    font-family: 'Maru', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #f816b8;
+    text-align: center;
+    pointer-events: none;
+    letter-spacing: 0;
+    background: rgb(255, 153, 0); /* Solid yellow highlight */
+    padding: 2px 0px;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-stack-back-btn,
+.card-stack-close-btn {
+    background: rgba(237, 54, 210, 0.95);
+    border: none;
+    border-radius: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.card-stack-back-btn:hover,
+.card-stack-close-btn:hover {
+    transform: scale(1.1);   
+    color: #333;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 1);
+}
+
+.card-stack-back-btn:active,
+.card-stack-close-btn:active {
+    color: #333;
+    transform: scale(0.95);
+}
+
+.card-stack-back-btn {
+    font-size: 28px;
+  
+}
+
+.card-stack-close-btn {
+    position: absolute;
+ 
+    right: 30px;
+}
+
+.card-stack-back-label {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    /* CTX Logo - Positioned at welcome card on mobile */
+    .logo-container {
+        width: 80px;
+        bottom: 50% !important;
+        left: 50% !important;
+        top: auto !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    /* Logo stays at welcome card when card is active on mobile */
+    .welcome-card.active ~ .plants .logo-container,
+    body:has(.welcome-card.active) .logo-container {
+        bottom: 50% !important;
+        left: 50% !important;
+        top: auto !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    /* Logo moves to top center when welcome card closes on mobile */
+    .logo-container.moved-to-corner {
+        bottom: auto !important;
+        top: 20px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    .logo {
+        width: 80px;
+        height: auto;
+    }
+    
+    /* Fix eye positioning for mobile - scale proportionally */
+    .eyeball-backgrounds {
+        width: 80px;
+        height: calc(69px * (80 / 177)); /* Maintain aspect ratio */
+        transform: scale(1);
+        transform-origin: center center;
+    }
+    
+    .left-eyeball,
+    .right-eyeball {
+        width: calc(6px * (80 / 177));
+        height: calc(6px * (80 / 177));
+    }
+    
+    /* Scale eye positions proportionally */
+    .left-eyeball {
+        top: calc(17px * (80 / 177));
+        left: calc(138px * (80 / 177));
+    }
+    
+    .right-eyeball {
+        top: calc(17px * (80 / 177));
+        left: calc(149px * (80 / 177));
+    }
+    
+    .logo-eyes {
+        width: 80px;
+        height: calc(69px * (80 / 177));
+        transform: scale(1);
+        transform-origin: center center;
+    }
+    
+    .logo-heart {
+        font-size: 16px;
+    }
+    
+    /* Scale all draggable objects to 35% of desktop size */
+    .bookshelf {
+        width: calc(290px * 0.35);
+        height: calc(412px * 0.35);
+    }
+    
+    .discplayer {
+        width: calc(300px * 0.35);
+    }
+    
+    .wordswelove {
+        width: calc(100px * 0.35);
+    }
+    
+    .crafttable {
+        width: calc(400px * 0.35);
+    }
+    
+    .ctxmailbox {
+        width: calc(120px * 0.35);
+    }
+    
+    .leaf-bush {
+        width: calc(150px * 0.35);
+    }
+    
+    .leaf-bush-img {
+        width: 100%;
+        height: auto;
+    }
+    
+    .bush-flower,
+    .bush-fruit {
+        width: calc(20px * 0.35);
+        height: calc(20px * 0.35);
+    }
+    
+    /* Music Player - Full width on mobile */
+    .music-player {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 0;
+        padding: 12px 16px;
+        margin: 0;
+    }
+    
+    .player-controls {
+        gap: 12px;
+    }
+    
+    .track-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .track-title {
+        font-size: 14px;
+    }
+    
+    .time-display {
+        font-size: 11px;
+    }
+    
+    /* Card Stack Container - Better mobile spacing */
+    .card-stack-container {
+        width: 100%;
+        padding: 80px 16px 100px;
+    }
+    
+    /* Cards - Better mobile sizing */
+    .swipe-card {
+        max-width: 100%;
+        max-height: calc(100vh - 180px);
+    }
+    
+    .artifact-image-wrapper img {
+        max-width: 100%;
+        max-height: calc(100vh - 180px);
+    }
+    
+    .swipe-card.card-image img {
+        max-width: 100%;
+        max-height: calc(100vh - 180px);
+    }
+    
+    /* Card controls - Better mobile positioning */
+    .card-stack-controls {
+        top: 20px;
+        padding: 0 16px;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+    }
+    
+    .card-stack-controls-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .card-stack-title {
+        font-size: 24px;
+        flex: 1;
+        text-align: center;
+        margin: 0 8px;
+    }
+    
+    .card-stack-back-btn,
+    .card-stack-close-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    
+    .card-stack-back-label {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+    
+    /* Substack Toggle - Better mobile positioning */
+    .substack-toggle {
+        bottom: 80px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+    
+    /* Substack Panel - Full width on mobile */
+    .substack-panel {
+        width: 100%;
+        max-width: 100%;
+        max-height: 90vh;
+        border-radius: 0;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        transform: none;
+    }
+    
+    /* Artifact title overlay - Better mobile positioning */
+    .artifact-title-overlay {
+        font-size: 20px;
+        padding: 2px 0px;
+        bottom: 0;
+        left: 0;
+        right: auto;
+        max-width: calc(100% - 32px);
+    }
+    
+    /* Text cards - Better mobile padding */
+    .card-inner {
+        padding: 24px;
+    }
+    
+    .swipe-card.card-text h3 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+    
+    .swipe-card.card-text p {
+        font-size: 15px;
+        line-height: 24px;
+    }
+    
+    /* Audio cards - Better mobile sizing */
+    .swipe-card.card-audio audio {
+        max-width: 100%;
+    }
+    
+    /* Link cards - Better mobile button sizing */
+    .swipe-card.card-link a {
+        padding: 12px 32px;
+        font-size: 15px;
+    }
+}
