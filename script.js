@@ -861,15 +861,12 @@ class EyeTracker {
     repositionLogoToBottomLeft() {
         if (!this.logoContainer) return;
         
-        // Calculate the bottom-left position with proper scaling
-        // The logo should be 10px from left and 80px from bottom
-        const xOffset = -10 - window.innerWidth / 2;
-        const yOffset = window.innerHeight - 80 - window.innerHeight / 2;
-        
-        this.logoContainer.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(0.6)`;
+        // Use CSS fixed positioning instead of transform calculations
+        // This prevents the logo from disappearing on resize
+        this.logoContainer.style.transform = '';
         this.logoContainer.style.opacity = '1';
         
-        console.log('🎨 Logo repositioned to bottom-left:', { xOffset, yOffset, windowSize: { w: window.innerWidth, h: window.innerHeight } });
+        console.log('🎨 Logo repositioned to bottom-left (using CSS fixed positioning)');
     }
     
     init() {
@@ -1316,12 +1313,11 @@ class ArtifactClusterSystem {
                 { type: 'audio', src: 'sonarium/song remedy/On Purpose - Solar Plexus.mp3', title: 'On Purpose - Solar Plexus' },
                 { type: 'audio', src: 'sonarium/song remedy/Love Is - Heart.mp3', title: 'Love Is - Heart' },
                 { type: 'audio', src: 'sonarium/song remedy/I Speak - Throat.mp3', title: 'I Speak - Throat' },
-                { type: 'text', content: 'Song Remedy is a collection of chakra-healing tracks designed to support mental wellness through sound therapy.', title: 'About Song Remedy' }
+                { type: 'text', content: 'Song Remedy is a collection of chakra-healing designed to support mental wellness through sound therapy. It was produced and performed by Brittany Tanner and in collaboration with BE-IMAGINATIVE, an Emmy Award Winning collective of artists, healers, and community leaders.', title: 'About Song Remedy' }
             ],
             'school-music': [
                 { type: 'link', url: 'https://www.ninaprotocol.com/releases/rockie-rode-and-csa-vocal-band-gowanus-river-swim-team-school-music', text: 'Nina Protocol Release ↗', title: 'Listen & Purchase Digital' },
                 { type: 'link', url: 'https://ctx.metalabel.com/record_o4h34ct3shbts3az7?variantId=1', text: 'Metalabel Release ↗', title: 'Get Physical CD' },
-                { type: 'link', url: 'https://drive.google.com/file/d/1HGGqUP_SWc_mhqqt-VI2bdrDoG2FSLoK/view', text: 'View Project Proposal ↗', title: 'Initial Project Proposal' },
                 { type: 'text', content: `"Spring Has Come" by Rockie Rode and CSA Vocal and Band
 - Written by Cate Osborne
 - Performed by vocal and rock students at the New York City Charter School of the Arts
@@ -1353,14 +1349,12 @@ Special thanks to LEFTI & Ricky Furniss (Sound Collective) and Josh Margolis & D
             ],
             'your-way': [
                 { type: 'link', url: 'https://culturetherapy.substack.com/p/this-is-your-way?utm_campaign=email-half-post&r=3dsb1&utm_source=substack&utm_medium=email', text: 'Substack Post by Ness Obad', title: 'This Is Your Way' },
-                { type: 'link', url: 'https://www.dropbox.com/scl/fi/bq2e5ga19lto3ohgdvc8d/FH25_CTX_Journal_ProductionFile_0731.pdf?rlkey=0m60hy84rcc9ez9fh3kvie46c&e=1&dl=0', text: 'Design File (PDF)', title: 'Journal Production File' },
-                { type: 'link', url: 'https://drive.google.com/file/d/1rVq9M1vcjE7q7FHp2j9eaHmcjM_ZcBZ8/view?usp=drive_link', text: 'Initial Project Proposal', title: 'Project Documentation' },
-                { type: 'link', url: 'https://drive.google.com/file/d/18kcO8-FPhVdhEV9kJp1XG0a43OWtbYck/view?usp=drive_link', text: 'Your Way Journal One Pager', title: 'Project Overview' }
+                { type: 'link', url: 'https://drive.google.com/file/d/10QAl83nvSLwPJ3hui8SuFtb1AJnPZOe3/view?usp=sharing', text: 'Design File (PDF)', title: 'Journal Production File' },
+                { type: 'link', url: 'https://drive.google.com/file/d/18kcO8-FPhVdhEV9kJp1XG0a43OWtbYck/view?usp=sharing', text: 'Your Way Journal One Pager', title: 'Project Overview' }
             ],
             'words-we-love': [
-                { type: 'image', src: 'wordswelove/wordswelovewebsite.png', title: 'Words We Love Website' },
-                { type: 'text', content: 'by Alicia', title: 'Creator' },
-                { type: 'link', url: 'https://ascii-ctx.web.app/', text: 'Visit @https://ascii-ctx.web.app/ ↗', title: 'Visit Website' }
+                { type: 'text', content: 'by Alicia Guo', title: 'Creator' },
+                { type: 'link', url: 'http://wordswe.love/website', text: 'Visit @http://wordswe.love/website ↗', title: 'Visit Website' }
             ],
             'teenagelife-collab': [
                 { type: 'link', url: 'https://culturetherapy.substack.com/p/this-teenage-life-x-culture-therapy', text: 'This Teenage Life x Culture Therapy', title: 'Read the Story' },
@@ -1369,8 +1363,7 @@ Special thanks to LEFTI & Ricky Furniss (Sound Collective) and Josh Margolis & D
                 { type: 'text', content: 'Collaborators:\nMolly Joseph\nEvelyn McKenney\nLydia Bach', title: 'Team' }
             ],
             'headstream-collages': [
-                { type: 'link', url: 'https://www.canva.com/design/DAGHYUDBt24/c28zDAr7l47cLXxnmJEoLg/edit?utm_content=DAGHYUDBt24&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton', text: 'View Collages on Canva ↗', title: 'Canva Collection' },
-                { type: 'link', url: 'https://docs.google.com/document/d/1HUoZun66bambW5f8ppsMdM2x8bqnpwsWYn6I7DBj5lA/edit?tab=t.0', text: 'Artifact Catalog (Google Doc) ↗', title: 'Documentation' }
+                { type: 'link', url: 'https://drive.google.com/drive/folders/1AFs3md5wELw6MLYiJjwvIlSt31knzxXH?usp=sharing', text: 'View Collages (PDF) ↗', title: 'Collage Collection' }
             ],
             'ctx-mailbox': [
                 { type: 'text', content: 'Welcome to Culture Therapy\n\nExploring the intersection of creativity and mental wellness. Join us on this journey of healing through art, music, and community....', title: 'Oct 8, 2025' },
@@ -2703,30 +2696,16 @@ class WelcomeCardSystem {
     close() {
         this.welcomeCard.classList.remove('active');
         
-        // Move logo to bottom left corner and trigger wink
-        if (this.logoContainer && !this.hasMovedToCorner) {
-            setTimeout(() => {
-                this.logoContainer.classList.add('moved-to-corner');
-                this.hasMovedToCorner = true;
-                
-                // Wink after starting to move
-                setTimeout(() => {
-                    this.wink();
-                }, 400);
-            }, 300);
-        }
+        // Trigger wink when closing welcome card
+        setTimeout(() => {
+            this.wink();
+        }, 200);
         
         console.log('📝 Welcome card closed');
     }
     
     open() {
         this.welcomeCard.classList.add('active');
-        
-        // Move logo back to center bottom when card opens
-        if (this.logoContainer && this.hasMovedToCorner) {
-            this.logoContainer.classList.remove('moved-to-corner');
-        }
-        
         console.log('📝 Welcome card opened');
     }
     
@@ -2739,5 +2718,65 @@ class WelcomeCardSystem {
         }
     }
 }
+
+// Cosmic Modal System
+class CosmicModalSystem {
+    constructor() {
+        this.pageCorner = document.getElementById('pageCornerTrigger');
+        this.modal = document.getElementById('cosmicModal');
+        this.swirlOrb = document.getElementById('swirlOrb');
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.pageCorner || !this.modal || !this.swirlOrb) return;
+        
+        // Page corner click - open modal
+        this.pageCorner.addEventListener('click', () => {
+            this.openModal();
+        });
+        
+        // Swirl orb click - close with spin animation
+        this.swirlOrb.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.closeModal();
+        });
+        
+        // ESC key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+                this.closeModal();
+            }
+        });
+        
+        console.log('🌌 Cosmic Modal System initialized');
+    }
+    
+    openModal() {
+        // Remove any existing closing animation
+        this.modal.classList.remove('closing');
+        // Force reflow
+        void this.modal.offsetWidth;
+        // Show modal
+        this.modal.classList.add('active');
+        console.log('🌌 Cosmic modal opened');
+    }
+    
+    closeModal() {
+        // Add closing animation
+        this.modal.classList.add('closing');
+        console.log('🌀 Cosmic modal closing with spin!');
+        
+        // After animation completes, hide modal
+        setTimeout(() => {
+            this.modal.classList.remove('active');
+            this.modal.classList.remove('closing');
+        }, 800); // Match animation duration
+    }
+}
+
+// Initialize cosmic modal system
+window.cosmicModalSystem = new CosmicModalSystem();
 
 // Artifact Cluster System will be initialized in the main DOMContentLoaded block

@@ -65,31 +65,16 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 600px;
-    padding: 40px 50px;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 248, 220, 0.95) 0%,
-        rgba(255, 248, 220, 0.95) 100%
-    );
-    background-image: 
-        repeating-linear-gradient(
-            transparent 0px,
-            transparent 23px,
-            rgba(150, 150, 150, 0.3) 23px,
-            rgba(150, 150, 150, 0.3) 24px
-        ),
-        linear-gradient(
-            to bottom,
-            rgba(255, 248, 220, 0.95) 0%,
-            rgba(255, 248, 220, 0.95) 100%
-        );
+    max-width: 700px;
+    padding: 0;
+    background: white;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     z-index: 100;
-    border-radius: 0;
+    border-radius: 15px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+    overflow: hidden;
 }
 
 .welcome-card.active {
@@ -113,7 +98,8 @@ body {
     font-weight: 600;
     color: #333;
     transition: all 0.2s ease;
-    border-radius: 0;
+    border-radius: 50%;
+    z-index: 10;
 }
 
 .welcome-card-close:hover {
@@ -121,35 +107,148 @@ body {
     transform: scale(1.1);
 }
 
-.welcome-card p {
-    color: #444;
-    line-height: 28px;
-    font-size: 18px;
-    margin: 0 0 30px 0;
-    text-align: left;
-    padding-right: 40px;
+.welcome-declaration {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
-.welcome-card-links {
+/* Page Corner Trigger */
+.page-corner-trigger {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    z-index: 150;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    padding: 0;
+    transform: rotate(-90deg);
+}
+
+.page-corner-trigger:hover {
+    transform: rotate(-90deg) scale(1.1);
+}
+
+.page-corner-trigger img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Cosmic Modal */
+.cosmic-modal {
+    font-family: 'GT Pressura';
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 90%;
+    max-width: 800px;
+    max-height: 85vh;
+    padding: 0;
+    background: white;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 300;
+    border-radius: 15px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.cosmic-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.cosmic-modal.closing {
+    animation: spin-and-shrink 0.8s ease-out forwards;
+    transform-origin: center center;
+}
+
+@keyframes spin-and-shrink {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(1080deg) scale(0);
+        opacity: 0;
+    }
+}
+
+.cosmic-modal-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
     display: flex;
- 
-    gap: 20px;
-    flex-wrap: wrap;
-
-    border-top: 1px solid rgba(150, 150, 150, 0.3);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px 40px;
 }
 
-.welcome-card-links a {
-    color: #444;
-    font-size: 18px;
+.cosmic-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.cosmic-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Swirl Orb Close Button */
+.swirl-orb {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(200, 220, 255, 0.5), rgba(100, 150, 255, 0.3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 0 20px rgba(100, 150, 255, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.swirl-orb:hover {
+    transform: scale(1.15) rotate(45deg);
+    box-shadow: 0 0 30px rgba(100, 150, 255, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Cosmic Nametag */
+.cosmic-nametag {
+    position: relative;
+    z-index: 2;
+    transform: rotate(7deg);
+    transition: transform 0.3s ease;
+    display: block;
     text-decoration: none;
-    transition: color 0.2s ease;
-    white-space: nowrap;
 }
 
-.welcome-card-links a:hover {
-    color: #000;
-    text-decoration: underline;
+.cosmic-nametag:hover {
+    transform: rotate(7deg) scale(1.05);
+}
+
+.cosmic-nametag img {
+    width: 400px;
+    height: auto;
+    filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.6));
 }
 
 /* MapleStory Cursor Styles */
@@ -210,12 +309,10 @@ html {
 /* Main container with fixed width and responsive height */
 .main-container {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     position: relative;
     margin: 0;
     background: none;
-    min-height: 100vh;
-    overflow: hidden;
 }
 
 /* Responsive scaling for smaller screens */
@@ -1299,37 +1396,46 @@ body::before { content: none; }
     pointer-events: auto;
 }
 
-/* Logo Animation */
+/* Logo - Fixed Position */
 .logo-container {
     position: fixed;
-    bottom: calc(50% - 200px);
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 20px;
+    left: 20px;
     z-index: 101;
     pointer-events: all;
     opacity: 1;
-    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Logo positioned at welcome card when card is active */
-.welcome-card.active ~ .plants .logo-container,
-body:has(.welcome-card.active) .logo-container {
-    bottom: calc(50% - 200px);
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-/* Logo moves to bottom left when welcome card closes */
-.logo-container.moved-to-corner {
-    bottom: 20px;
-    left: 20px;
-    transform: translateX(0);
 }
 
 .logo {
     width: 177px;
     height: 69px;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Navigation Links */
+.nav-links {
+    position: fixed;
+    bottom: 20px;
+    left: 217px; /* 20px margin + 177px logo width + 20px spacing */
+    z-index: 101;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #333;
+    text-decoration: none;
+    font-family: 'GT Pressura', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    color: #000;
+    text-decoration: underline;
 }
 
 .eyeball-backgrounds {
@@ -2243,30 +2349,12 @@ body.dreamscape-blurred > *:not(.card-stack-overlay) {
 
 /* Mobile Responsive Styles */
 @media screen and (max-width: 768px) {
-    /* CTX Logo - Always at top center on mobile, no animation */
+    /* CTX Logo - Top left on mobile */
     .logo-container {
-        width: 80px;
         bottom: auto !important;
-        top: 20px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        transition: none !important;
-    }
-    
-    /* Logo stays at top center always on mobile */
-    .welcome-card.active ~ .plants .logo-container,
-    body:has(.welcome-card.active) .logo-container {
-        bottom: auto !important;
-        top: 20px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-    }
-    
-    .logo-container.moved-to-corner {
-        bottom: auto !important;
-        top: 20px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
+        top: 16px !important;
+        left: 16px !important;
+        z-index: 102;
     }
     
     .logo {
@@ -2309,28 +2397,64 @@ body.dreamscape-blurred > *:not(.card-stack-overlay) {
     .logo-heart {
         font-size: 16px;
     }
+
+    /* Navigation Links - To the right of logo on mobile */
+    .nav-links {
+        top: 16px;
+        bottom: auto;
+        left: 112px; /* 16px margin + 80px logo width + 16px spacing */
+        right: 16px;
+        flex-direction: row;
+        gap: 16px;
+        justify-content: flex-start;
+    }
+    
+    .nav-links a {
+        font-size: 14px;
+    }
     
     /* Welcome card - position below logo on mobile */
     .welcome-card {
-        top: 300px !important;
+        top: 50% !important;
         max-width: calc(100% - 32px);
-        padding: 20px 24px !important;
+        padding: 0 !important;
         width: calc(100% - 32px);
+        border-radius: 10px;
     }
     
-    .welcome-card p {
-        font-size: 15px !important;
-        line-height: 22px !important;
-        margin: 0 0 16px 0 !important;
+    /* Page corner - mobile */
+    .page-corner-trigger {
+        top: 0px;
+        right: 0px;
+        width: 28px;
+        height: 28px;
     }
     
-    .welcome-card-links {
-        padding-top: 12px !important;
-        gap: 12px !important;
+    .page-corner-trigger:hover {
+        transform: rotate(-90deg) scale(1.1);
     }
     
-    .welcome-card-links a {
-        font-size: 15px !important;
+    /* Cosmic modal - mobile */
+    .cosmic-modal {
+        max-width: calc(100% - 32px);
+        width: calc(100% - 32px);
+        max-height: 90vh;
+    }
+    
+    .cosmic-modal-content {
+        padding: 50px 20px 30px;
+    }
+    
+    .cosmic-nametag img {
+        width: 280px;
+    }
+    
+    .swirl-orb {
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+        top: 12px;
+        right: 12px;
     }
     
     .welcome-card-close {
