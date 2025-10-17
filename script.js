@@ -1313,7 +1313,7 @@ class ArtifactClusterSystem {
                 { type: 'audio', src: 'sonarium/song remedy/On Purpose - Solar Plexus.mp3', title: 'On Purpose - Solar Plexus' },
                 { type: 'audio', src: 'sonarium/song remedy/Love Is - Heart.mp3', title: 'Love Is - Heart' },
                 { type: 'audio', src: 'sonarium/song remedy/I Speak - Throat.mp3', title: 'I Speak - Throat' },
-                { type: 'text', content: 'Song Remedy is a collection of chakra-healing designed to support mental wellness through sound therapy. It was produced and performed by Brittany Tanner and in collaboration with BE-IMAGINATIVE, an Emmy Award Winning collective of artists, healers, and community leaders.', title: 'About Song Remedy' }
+                { type: 'text', content: 'Song Remedy is a collection of chakra-healing tracks designed to support mental wellness through sound therapy. It was produced and performed by Brittany Tanner and in collaboration with BE-IMAGINATIVE, an Emmy Award Winning collective of artists, healers, and community leaders.', title: 'About Song Remedy' }
             ],
             'school-music': [
                 { type: 'link', url: 'https://www.ninaprotocol.com/releases/rockie-rode-and-csa-vocal-band-gowanus-river-swim-team-school-music', text: 'Nina Protocol Release ↗', title: 'Listen & Purchase Digital' },
