@@ -345,6 +345,14 @@ class DragDropSystem {
                 }
             });
         }
+        if (element.classList.contains('givingcircle')) {
+            element.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (window.cardStackSystem) {
+                    window.cardStackSystem.openArtifactStack('givingcircle');
+                }
+            });
+        }
     }
     
     setupSonariumPlant() {
@@ -1089,6 +1097,62 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('   • artifactClusterSystem.expandClusterById("song-remedy") // Expand specific cluster');
     console.log('   • artifactClusterSystem.getClusterContent("mental-magazine") // Get cluster content');
     console.log('   • artifactClusterSystem.addContentToCluster("song-remedy", {type: "text", content: "New content", title: "New Title"}) // Add content');
+
+    // ── URL / Hash routing ─────────────────────────────────────────
+    // Maps URL slugs → artifact type keys used by cardStackSystem
+    const artifactRoutes = {
+        'givingcircle':      'givingcircle',
+        'sonarium':          'discplayer',
+        'library':           'bookshelf',
+        'neighborhoodlibrary': 'bookshelf',
+        'bookshelf':         'bookshelf',
+        'crafttable':        'crafttable',
+        'craft':             'crafttable',
+        'mailbox':           'ctxmailbox',
+        'ctxmailbox':        'ctxmailbox',
+        'wordswelove':       'wordswelove',
+        'words':             'wordswelove',
+    };
+
+    function openArtifactFromSlug(slug, itemSlug = null) {
+        if (!slug) return;
+        const key = artifactRoutes[slug.toLowerCase().replace(/[-_\s]/g, '')];
+        if (!key || !window.cardStackSystem) return;
+
+        window.cardStackSystem.openArtifactStack(key);
+
+        // If a specific item was requested, navigate into it after Layer 2 renders
+        if (itemSlug) {
+            setTimeout(() => {
+                if (window.cardStackSystem) {
+                    window.cardStackSystem.openContentStack(itemSlug, itemSlug);
+                }
+            }, 300);
+        }
+    }
+
+    // Check query params  ?artifact=library&item=mental-magazine
+    const params = new URLSearchParams(window.location.search);
+    const paramArtifact = params.get('artifact') || params.get('a');
+    const paramItem = params.get('item');
+
+    // Check hash  #sonarium
+    const hashArtifact = window.location.hash.replace('#', '');
+
+    const slug = paramArtifact || hashArtifact;
+    if (slug) {
+        // Immediately suppress the welcome card — no fade-in when linking to an artifact
+        const welcomeCardEl = document.querySelector('.welcome-card');
+        if (welcomeCardEl) welcomeCardEl.classList.remove('active');
+
+        // Open the artifact (and optional item) after all systems have fully initialised
+        setTimeout(() => openArtifactFromSlug(slug, paramItem), 600);
+    }
+
+    // Also support hash changes while the page is open
+    window.addEventListener('hashchange', () => {
+        openArtifactFromSlug(window.location.hash.replace('#', ''));
+    });
 });
 
 // Substack Integration Class
@@ -2023,6 +2087,30 @@ class CardStackSystem {
     }
     
     // Special handler for CTX Mailbox - loads Substack articles
+    openGivingCircleStack() {
+        console.log('🌀 Opening Giving Circle...');
+        
+        this.layerHistory.push({ layer: 3, id: 'giving-circle', name: 'Giving Circle' });
+        this.currentLayer = 3;
+        
+        this.blurLayer(1);
+        
+        const cards = [
+            {
+                type: 'cover',
+                src: 'assets/givingcircleicon.png',
+                title: 'Giving Circle'
+            },
+            {
+                type: 'iframe',
+                src: 'https://docs.google.com/document/d/e/2PACX-1vT7INwiBNXyZcujg6QzFglz98JXVBQCPF8HK19Ga3KyVXYqhcPm9Tm7FP1ddlly1eo29htkh0E4-Oa7/pub?embedded=true',
+                title: 'Giving Circle'
+            }
+        ];
+        
+        this.createCardStack(cards, 'content', 'giving-circle', 'Giving Circle');
+    }
+    
     openMailboxStack() {
         console.log('📬 Opening CTX Mailbox with Substack articles...');
         
@@ -2106,8 +2194,66 @@ class CardStackSystem {
     }
     
     // Layer 2: Open artifact stack (e.g., all albums or all books)
-    openArtifactStack(artifactType) {
+    // Reverse map: artifact type key → URL slug
+    _artifactTypeToSlug(artifactType) {
+        const map = {
+            'bookshelf':    'library',
+            'discplayer':   'sonarium',
+            'wordswelove':  'wordswelove',
+            'ctxmailbox':   'mailbox',
+            'crafttable':   'crafttable',
+            'givingcircle': 'givingcircle',
+        };
+        return map[artifactType] || artifactType;
+    }
+
+    // Display name map (shared between URL helpers and updateControls)
+    _artifactDisplayName(artifactType) {
+        const names = {
+            'bookshelf':    'Neighborhood Library',
+            'discplayer':   'Sonarium',
+            'crafttable':   'Craft Table',
+            'wordswelove':  'Words We Love',
+            'ctxmailbox':   'CTX Mailbox',
+            'givingcircle': 'Giving Circle',
+        };
+        return names[artifactType] || artifactType;
+    }
+
+    // pushState — used when first entering the card stack from the dreamscape
+    _pushArtifactUrl(artifactType, itemId = null) {
+        const slug = this._artifactTypeToSlug(artifactType);
+        const url = new URL(window.location.href);
+        url.searchParams.set('artifact', slug);
+        if (itemId) url.searchParams.set('item', itemId);
+        else url.searchParams.delete('item');
+        history.pushState({ artifact: slug, item: itemId }, '', url.toString());
+    }
+
+    // replaceState — used when navigating within the card stack (back, deeper levels)
+    _replaceArtifactUrl(artifactType, itemId = null) {
+        const slug = this._artifactTypeToSlug(artifactType);
+        const url = new URL(window.location.href);
+        url.searchParams.set('artifact', slug);
+        if (itemId) url.searchParams.set('item', itemId);
+        else url.searchParams.delete('item');
+        history.replaceState({ artifact: slug, item: itemId }, '', url.toString());
+    }
+
+    // Remove ?artifact & ?item from URL when card stack is closed
+    _clearArtifactUrl() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('artifact');
+        url.searchParams.delete('item');
+        history.replaceState({}, '', url.toString());
+    }
+
+    openArtifactStack(artifactType, { replace = false } = {}) {
         console.log(`🎴 Opening artifact stack for: ${artifactType}`);
+
+        // Sync URL — push only when first entering from the dreamscape, replace when navigating back
+        if (replace) this._replaceArtifactUrl(artifactType);
+        else this._pushArtifactUrl(artifactType);
         
         this.layerHistory.push({ layer: 2, type: artifactType });
         this.currentLayer = 2;
@@ -2140,6 +2286,9 @@ class CardStackSystem {
                 { id: 'teenagelife-collab', name: 'This Teenage Life Collaboration', image: 'crafttable/thisteenagelifecollabs/cover.png' },
                 { id: 'headstream-collages', name: 'Headstream Collages', image: 'crafttable/headstreamcollages/cover.png' }
             ];
+        } else if (artifactType === 'givingcircle') {
+            this.openGivingCircleStack();
+            return;
         }
         
         // Create cards for each artifact
@@ -2149,7 +2298,13 @@ class CardStackSystem {
     // Layer 3: Open content stack (e.g., all songs in an album)
     openContentStack(artifactId, artifactName) {
         console.log(`🎴 Opening content stack for: ${artifactId}`);
-        
+
+        // Sync URL: keep the parent artifact slug and add the item id
+        const parentHistory = this.layerHistory.find(h => h.layer === 2);
+        if (parentHistory) {
+            this._replaceArtifactUrl(parentHistory.type, artifactId);
+        }
+
         this.layerHistory.push({ layer: 3, id: artifactId, name: artifactName });
         this.currentLayer = 3;
         
@@ -2224,19 +2379,9 @@ class CardStackSystem {
         // Determine the title to display
         let displayTitle = '';
         if (this.currentLayer === 2) {
-            // Layer 2 - show the artifact type name
             const currentHistory = this.layerHistory[this.layerHistory.length - 1];
-            const artifactType = currentHistory.type;
-            const artifactNames = {
-                'bookshelf': 'Neighborhood Library',
-                'discplayer': 'Sonarium',
-                'crafttable': 'Craft Table',
-                'wordswelove': 'Words We Love',
-                'ctxmailbox': 'CTX Mailbox'
-            };
-            displayTitle = artifactNames[artifactType] || artifactType;
+            displayTitle = this._artifactDisplayName(currentHistory.type);
         } else if (this.currentLayer === 3) {
-            // Layer 3 - show the specific artifact name or stack name
             const currentHistory = this.layerHistory[this.layerHistory.length - 1];
             displayTitle = currentHistory.name || stackName;
         }
@@ -2245,9 +2390,13 @@ class CardStackSystem {
         this.titleElement.textContent = displayTitle;
         
         if (this.currentLayer === 3 && !isSingleArtifact) {
-            // Layer 3 (content) from Layer 2 (artifact stack) - show back section
+            // Back label should name the PARENT (Layer 2) artifact, not the current content
+            const parentHistory = this.layerHistory.find(h => h.layer === 2);
+            const parentName = parentHistory
+                ? this._artifactDisplayName(parentHistory.type)
+                : 'back';
             this.backSection.style.display = 'flex';
-            this.backLabel.textContent = `Back to ${stackName}`;
+            this.backLabel.textContent = `Back to ${parentName}`;
         } else {
             // Layer 2 (artifacts) or single-artifact case - hide back section
             this.backSection.style.display = 'none';
@@ -2453,6 +2602,17 @@ class CardStackSystem {
                 inner.appendChild(pdfTitle);
                 inner.appendChild(pdfLink);
                 break;
+
+            case 'iframe':
+                card.classList.add('card-iframe');
+                const iframeEl = document.createElement('iframe');
+                iframeEl.src = item.src;
+                iframeEl.title = item.title || 'Embedded document';
+                iframeEl.allow = 'autoplay';
+                iframeEl.setAttribute('allowfullscreen', '');
+                iframeEl.setAttribute('frameborder', '0');
+                inner.appendChild(iframeEl);
+                break;
                 
             default:
                 card.classList.add('card-text');
@@ -2605,8 +2765,8 @@ class CardStackSystem {
             this.currentLayer = 2;
             
             if (previousLayer && previousLayer.layer === 2) {
-                // Reopen Layer 2 artifact stack
-                this.openArtifactStack(previousLayer.type);
+                // Reopen Layer 2 artifact stack — use replaceState so we don't add a history entry
+                this.openArtifactStack(previousLayer.type, { replace: true });
             } else {
                 // No Layer 2, go straight to Layer 1
                 this.closeAll();
@@ -2633,6 +2793,9 @@ class CardStackSystem {
         this.currentLayer = 1;
         this.layerHistory = [];
         this.currentStack = null;
+
+        // Remove ?artifact from URL
+        this._clearArtifactUrl();
         
         console.log('🎴 Returned to Layer 1 (Dreamscape)');
     }
