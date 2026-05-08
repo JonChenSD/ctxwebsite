@@ -2081,9 +2081,538 @@ class CardStackSystem {
         
         this.overlayElement.appendChild(this.controlsElement);
         this.overlayElement.appendChild(this.containerElement);
+        this.setupGivingCircleInviteDock();
         document.body.appendChild(this.overlayElement);
         
         console.log('🎴 Created overlay, container, and control elements');
+    }
+
+    setupGivingCircleInviteDock() {
+        const wrap = document.createElement('div');
+        wrap.className = 'giving-circle-invite';
+
+        const stage = document.createElement('div');
+        stage.className = 'giving-circle-invite-stage';
+
+        const sheet = document.createElement('div');
+        sheet.className = 'giving-circle-invite-sheet';
+        /* The sheet IS the letter — it carries the full long copy. When it
+           lives inside the envelope it's capped at envelope height with
+           overflow:hidden (only the top of the letter shows); when the user
+           opens it, the sheet rises out of the envelope and then expands
+           (via JS reparenting + animated inline styles) to fill the viewport
+           and become scrollable. */
+        sheet.innerHTML = `
+            <section class="invite-fs-section invite-fs-hook">
+                <p class="invite-fs-lede">somewhere, right now, a young person is making something.</p>
+                <p>drawing, writing, playing, building. and it is keeping them well.</p>
+                <p>you already know this. that's why you're here.</p>
+            </section>
+
+            <section class="invite-fs-section">
+                <h3>we are culture therapy <span class="invite-fs-tag">(ctx)</span></h3>
+                <p>a social enterprise illuminating and amplifying art participation and creative expression as vital resources for young people's mental well-being.</p>
+                <p>a purposeful combination of words that speak to the power that's cultivated from our collective participation in art and self-expression, and the measurable impact it has on our wellbeing.</p>
+                <p>a mission to build a culture of well-being for every young person by ensuring art and creative expression are non-negotiable and part of essential infrastructure for our healthy, thriving society.</p>
+            </section>
+
+            <section class="invite-fs-section">
+                <h3>we are hatching youth artist-led giving circles</h3>
+                <p>simple, replicable, and powerful model for putting resources directly into the hands of young creatives, so they can invest in art and creative expression in their own communities.</p>
+                <ul class="invite-fs-list">
+                    <li>consist of 6&ndash;8 young creatives (ages 13&ndash;26) who are already connected through place.</li>
+                    <li>come together over six months.</li>
+                    <li>make collective decisions.</li>
+                    <li>make grants to their community.</li>
+                    <li>guided, not directed, by a trusted adult facilitator.</li>
+                </ul>
+                <div class="invite-fs-example">
+                    <p class="invite-fs-example-label">Example: with $20K, you can</p>
+                    <ul class="invite-fs-list invite-fs-list--tight">
+                        <li>stipend youth creatives</li>
+                        <li>stipend circle facilitator &amp; collaborator</li>
+                        <li>seed the circle with a gift they will grant</li>
+                        <li>see the circle grow</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="invite-fs-section">
+                <h3>we need each other</h3>
+                <p>as a circle steward, you won't be doing this alone. here are the people you'll be doing it with.</p>
+                <h4>circle collaborator</h4>
+                <p>a 501(c)(3) organization already active in upstream artist-led, youth health and wellbeing work in a local geography.</p>
+                <p>a trusted place that youth already know, are engaged with, and are comfortable in.</p>
+                <h4>circle facilitator</h4>
+                <p>an adult who guides the youth-led giving circle process.</p>
+                <p>a keeper of the giving circle process.</p>
+                <p>responsible for upholding the circle values, parameters, ethics, and goals, but not to influence.</p>
+            </section>
+
+            <section class="invite-fs-section invite-fs-stewards-section">
+                <h3>meet some of the stewards</h3>
+                <div class="invite-fs-stewards-grid">
+                    <div class="invite-fs-steward">
+                        <img src="assets/people/penelope/penelope.png" alt="Penelope Douglas" />
+                        <p class="invite-fs-steward-name">Penelope Douglas</p>
+                    </div>
+                    <div class="invite-fs-steward">
+                        <img src="assets/people/melinda%20/melinda.png" alt="Melinda Childs" />
+                        <p class="invite-fs-steward-name">Melinda Childs</p>
+                    </div>
+                    <div class="invite-fs-steward">
+                        <img src="assets/people/mel/mel.png" alt="Mel Harris" />
+                        <p class="invite-fs-steward-name">Mel Harris</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="invite-fs-section">
+                <h3>we wrote this for someone. is it you?</h3>
+                <ul class="invite-fs-list invite-fs-checklist">
+                    <li>you are committed to the idea that art and creative expression should be essential infrastructure for the health and wellbeing of young people in yours and every community.</li>
+                    <li>you are excited to bring your resources (yours and your friends') to hatch a giving circle in the community you share.</li>
+                    <li>you are a trusted adult already involved in art &amp; creative expression in their community.</li>
+                    <li>you love the idea of young people working together and making collective decisions to invest in art and creative expression in their own place, tying these threads together.</li>
+                    <li>you are already closely connected through your work with young people, in trusted and safe relationships.</li>
+                    <li>you can envision how to connect to a collaborator &mdash; an organization that is a trusted place for young people where they participate in art and creative expression.</li>
+                    <li>you are ready to ensure the spirit and intentions of the work remain intact as the circle takes shape.</li>
+                </ul>
+                <p class="invite-fs-closing">if you're nodding, keep going.</p>
+            </section>
+        `;
+
+        /* Border-triangle envelope — adapted from https://codepen.io/Coding-Star/pen/WNpbvwB */
+        const cpen = document.createElement('div');
+        cpen.className = 'giving-circle-cpen';
+
+        const mechanism = document.createElement('div');
+        mechanism.className = 'giving-circle-cpen-mechanism';
+
+        const lidOne = document.createElement('div');
+        lidOne.className = 'giving-circle-cpen-lid giving-circle-cpen-lid--one';
+        lidOne.setAttribute('aria-hidden', 'true');
+
+        const lidTwo = document.createElement('div');
+        lidTwo.className = 'giving-circle-cpen-lid giving-circle-cpen-lid--two';
+        lidTwo.setAttribute('aria-hidden', 'true');
+
+        const cpenEnv = document.createElement('div');
+        cpenEnv.className = 'giving-circle-cpen-env';
+        cpenEnv.setAttribute('aria-hidden', 'true');
+
+        /* Stamp acts as the "open" trigger — fades quickly on click before the flap rotates. */
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'giving-circle-invite-trigger giving-circle-invite-stamp';
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Open invitation');
+        ['Open', 'Invitation'].forEach((text) => {
+            const line = document.createElement('span');
+            line.className = 'giving-circle-invite-stamp-line';
+            line.textContent = text;
+            trigger.appendChild(line);
+        });
+
+        /* Foldback button lives at the top of the letter sheet (clipped/hidden by the
+           letter window when closed; revealed when the letter slides out). */
+        const foldback = document.createElement('button');
+        foldback.type = 'button';
+        foldback.className = 'giving-circle-invite-foldback';
+        foldback.setAttribute('aria-label', 'Fold invitation');
+        foldback.innerHTML = '<span aria-hidden="true">×</span>';
+        sheet.insertBefore(foldback, sheet.firstChild);
+
+        /* Backdrop appended to <body> when fullscreen opens so the page
+           behind blurs/dims away. */
+        const backdrop = document.createElement('div');
+        backdrop.className = 'giving-circle-invite-backdrop';
+        backdrop.setAttribute('aria-hidden', 'true');
+
+        const TIMER_KEYS = [
+            '_sheetOpenTimer',
+            '_flapShutTimer',
+            '_flapOpenTimer',
+            '_stampReturnTimer',
+            '_expandTimer',
+            '_collapseTimer',
+            '_postFullscreenTimer',
+            '_scatterFloatTimer',
+            '_scatterUnfloatTimer',
+        ];
+
+        const clearInviteTimers = () => {
+            TIMER_KEYS.forEach((key) => {
+                if (wrap[key]) {
+                    window.clearTimeout(wrap[key]);
+                    wrap[key] = null;
+                }
+            });
+        };
+
+        const motionDelays = () => {
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            return {
+                stampMs: reduce ? 0 : 280,
+                flapMs: reduce ? 0 : 520,
+                sheetMs: reduce ? 0 : 600,
+                /* Brief pause after the letter rises so the user reads "the
+                   letter is out" before it expands. */
+                expandLeadMs: reduce ? 0 : 240,
+                expandMs: reduce ? 0 : 640,
+                collapseMs: reduce ? 0 : 540,
+            };
+        };
+
+        const lockBodyScroll = () => {
+            document.body.classList.add('giving-circle-fullscreen-lock');
+        };
+        const unlockBodyScroll = () => {
+            document.body.classList.remove('giving-circle-fullscreen-lock');
+        };
+
+        /* Compute the fullscreen target rect as concrete pixels so the
+           top/left/width/height transitions are smooth. */
+        const computeFullscreenTarget = () => {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const isMobile = vw <= 900;
+            let padX, padTop, padBot, maxW;
+            if (isMobile) {
+                padX   = Math.max(12, vw * 0.03);
+                padTop = 64;   /* clear the floating close × button */
+                padBot = 16;
+                maxW   = 9999; /* full-bleed on mobile */
+            } else {
+                padX   = Math.max(16, Math.min(vw * 0.04, 48));
+                padTop = Math.max(20, Math.min(vh * 0.04, 56));
+                padBot = padTop;
+                maxW   = 720;
+            }
+            const width    = Math.min(maxW, vw - padX * 2);
+            /* Left EDGE (not center) so we never need transform for centering.
+               This avoids the none→translateX(-50%) interpolation bug. */
+            const leftEdge = Math.round((vw - width) / 2);
+            return {
+                top:    padTop,
+                left:   leftEdge,
+                width,
+                height: vh - padTop - padBot,
+            };
+        };
+
+        /* FLIP-style expand: snapshot the sheet's current screen rect, reparent
+           to <body> (escaping the mechanism's perspective containing block),
+           pin to that rect via inline styles, then animate to viewport-fill. */
+        const expandSheetToFullscreen = () => {
+            const fromRect = sheet.getBoundingClientRect();
+            sheet._fromRect = {
+                top: fromRect.top,
+                left: fromRect.left,
+                width: fromRect.width,
+                height: fromRect.height,
+            };
+            sheet._homeParent = sheet.parentNode;
+            sheet._homeNextSibling = sheet.nextSibling;
+
+            document.body.appendChild(backdrop);
+            document.body.appendChild(sheet);
+
+            backdrop.classList.add('giving-circle-invite-backdrop--visible');
+
+            sheet.classList.add('giving-circle-invite-sheet--fullscreen');
+            sheet.style.cssText =
+                'position: fixed;' +
+                'top: ' + fromRect.top + 'px;' +
+                'left: ' + fromRect.left + 'px;' +
+                'width: ' + fromRect.width + 'px;' +
+                'height: ' + fromRect.height + 'px;' +
+                'max-height: ' + fromRect.height + 'px;' +
+                'margin: 0;' +
+                'bottom: auto;' +
+                'right: auto;' +
+                'transform: none;' +
+                'z-index: 10000;' +
+                'overflow: hidden;';
+
+            /* Force reflow so the start state is committed before transitioning. */
+            void sheet.offsetHeight;
+
+            const target = computeFullscreenTarget();
+
+            sheet.style.transition =
+                'top 0.62s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'left 0.62s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'width 0.62s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'height 0.62s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'max-height 0.62s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'border-radius 0.5s ease,' +
+                'padding 0.5s ease,' +
+                'box-shadow 0.5s ease,' +
+                'transform 0.62s cubic-bezier(0.4, 0, 0.2, 1)';
+
+            sheet.style.top       = target.top    + 'px';
+            sheet.style.left      = target.left   + 'px';
+            sheet.style.width     = target.width  + 'px';
+            sheet.style.height    = target.height + 'px';
+            sheet.style.maxHeight = target.height + 'px';
+            /* Keep transform: none — centering is handled by the left value so
+               we don't get a none→translateX(-50%) interpolation glitch. */
+            sheet.style.transform = 'none';
+        };
+
+        const finishExpand = () => {
+            sheet.style.overflowY = 'auto';
+            sheet.style.overflowX = 'hidden';
+
+            /* Reposition the fullscreen sheet whenever the viewport is resized
+               so it always stays centered regardless of screen-width changes. */
+            const onResize = () => {
+                if (!wrap.classList.contains('giving-circle-invite--fullscreen')) return;
+                const t = computeFullscreenTarget();
+                sheet.style.transition = 'none';
+                sheet.style.top    = t.top    + 'px';
+                sheet.style.left   = t.left   + 'px';
+                sheet.style.width  = t.width  + 'px';
+                sheet.style.height = t.height + 'px';
+                sheet.style.maxHeight = t.height + 'px';
+                /* Re-enable transitions after one frame so the next open/close
+                   still animates smoothly. */
+                requestAnimationFrame(() => {
+                    sheet.style.transition = '';
+                });
+            };
+            wrap._resizeHandler = onResize;
+            window.addEventListener('resize', onResize);
+        };
+
+        const collapseSheetToEnvelope = () => {
+            const fromRect = sheet._fromRect;
+            if (!fromRect) return;
+
+            sheet.scrollTop = 0;
+            sheet.style.overflowY = 'hidden';
+            sheet.style.overflowX = 'hidden';
+
+            void sheet.offsetHeight;
+
+            sheet.style.transition =
+                'top 0.54s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'left 0.54s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'width 0.54s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'height 0.54s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'max-height 0.54s cubic-bezier(0.4, 0, 0.2, 1),' +
+                'border-radius 0.45s ease,' +
+                'padding 0.45s ease,' +
+                'box-shadow 0.45s ease,' +
+                'transform 0.54s cubic-bezier(0.4, 0, 0.2, 1)';
+
+            sheet.style.top = fromRect.top + 'px';
+            sheet.style.left = fromRect.left + 'px';
+            sheet.style.width = fromRect.width + 'px';
+            sheet.style.height = fromRect.height + 'px';
+            sheet.style.maxHeight = fromRect.height + 'px';
+            sheet.style.transform = 'none';
+
+            backdrop.classList.remove('giving-circle-invite-backdrop--visible');
+        };
+
+        const finishCollapse = () => {
+            if (wrap._resizeHandler) {
+                window.removeEventListener('resize', wrap._resizeHandler);
+                wrap._resizeHandler = null;
+            }
+
+            if (!sheet._homeParent) return;
+            if (sheet._homeNextSibling && sheet._homeNextSibling.parentNode === sheet._homeParent) {
+                sheet._homeParent.insertBefore(sheet, sheet._homeNextSibling);
+            } else {
+                sheet._homeParent.appendChild(sheet);
+            }
+            sheet.classList.remove('giving-circle-invite-sheet--fullscreen');
+            sheet.style.cssText = '';
+            sheet._fromRect = null;
+            if (backdrop.parentNode === document.body) document.body.removeChild(backdrop);
+        };
+
+        const toggleInvitation = (e) => {
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+            const isOpen = wrap.classList.contains('giving-circle-invite--stamp-broken');
+            const fullscreenOpen = wrap.classList.contains('giving-circle-invite--fullscreen');
+            const { stampMs, flapMs, sheetMs, expandLeadMs, expandMs, collapseMs } = motionDelays();
+
+            if (!isOpen) {
+                /* OPEN: stamp fades → flap unfolds → letter rises out of the
+                   envelope → letter expands to fill the viewport (scrollable). */
+                clearInviteTimers();
+                wrap.classList.add('giving-circle-invite--stamp-broken');
+                trigger.setAttribute('aria-expanded', 'true');
+                trigger.setAttribute('aria-label', 'Fold invitation');
+
+                wrap._flapOpenTimer = window.setTimeout(() => {
+                    wrap._flapOpenTimer = null;
+                    wrap.classList.add('giving-circle-invite--flap-open');
+
+                    wrap._sheetOpenTimer = window.setTimeout(() => {
+                        wrap._sheetOpenTimer = null;
+                        wrap.classList.add('giving-circle-invite--sheet-open');
+
+                        wrap._expandTimer = window.setTimeout(() => {
+                            wrap._expandTimer = null;
+                            wrap.classList.add('giving-circle-invite--fullscreen');
+                            lockBodyScroll();
+                            expandSheetToFullscreen();
+
+                            wrap._postFullscreenTimer = window.setTimeout(() => {
+                                wrap._postFullscreenTimer = null;
+                                finishExpand();
+                            }, expandMs);
+                        }, sheetMs + expandLeadMs);
+                    }, flapMs);
+                }, stampMs);
+                return;
+            }
+
+            /* CLOSE: collapse fullscreen → letter slides back into envelope →
+               flap closes → stamp returns. */
+            clearInviteTimers();
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.setAttribute('aria-label', 'Open invitation');
+
+            const wasFullscreen = fullscreenOpen;
+            if (wasFullscreen) {
+                collapseSheetToEnvelope();
+            }
+
+            const afterCollapse = wasFullscreen ? collapseMs : 0;
+            wrap._collapseTimer = window.setTimeout(() => {
+                wrap._collapseTimer = null;
+                if (wasFullscreen) {
+                    finishCollapse();
+                    wrap.classList.remove('giving-circle-invite--fullscreen');
+                    unlockBodyScroll();
+                }
+                /* Double rAF: after reparenting the sheet back into the
+                   letter-window, give the browser two frames to paint it at
+                   the CSS-computed raised position (--sheet-open still active)
+                   before we remove that class and let it slide down. Without
+                   this, the position: fixed → position: absolute switch and
+                   the class removal happen in the same tick, causing a jump. */
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        /* Remove --sheet-open: letter slides back down (0.62s).
+                           Close the flap at the same time (tiny lead so the user
+                           perceives both motions as one physical act of sealing).
+                           The flap (z=4) sweeps closed over the descending letter
+                           (z=2), hiding the exposed envelope interior as it goes. */
+                        wrap.classList.remove('giving-circle-invite--sheet-open');
+                        wrap._flapShutTimer = window.setTimeout(() => {
+                            wrap._flapShutTimer = null;
+                            wrap.classList.remove('giving-circle-invite--flap-open');
+                            wrap._stampReturnTimer = window.setTimeout(() => {
+                                wrap._stampReturnTimer = null;
+                                wrap.classList.remove('giving-circle-invite--stamp-broken');
+                            }, flapMs);
+                        }, 80);
+                    });
+                });
+            }, afterCollapse);
+        };
+
+        trigger.addEventListener('click', toggleInvitation);
+        foldback.addEventListener('click', toggleInvitation);
+        lidOne.addEventListener('click', toggleInvitation);
+        backdrop.addEventListener('click', toggleInvitation);
+        const escHandler = (event) => {
+            if (event.key !== 'Escape') return;
+            if (!wrap.classList.contains('giving-circle-invite--fullscreen')) return;
+            toggleInvitation(event);
+        };
+        document.addEventListener('keydown', escHandler);
+        wrap._escHandler = escHandler;
+
+        /* The letter lives inside an "envelope pocket" — a window with overflow:hidden
+           sized to the envelope when closed, that expands upward when the flap opens
+           (so the sheet inside reads as "rising out of the envelope"). */
+        const letterWindow = document.createElement('div');
+        letterWindow.className = 'giving-circle-cpen-letter-window';
+        letterWindow.appendChild(sheet);
+
+        mechanism.appendChild(lidOne);
+        mechanism.appendChild(lidTwo);
+        mechanism.appendChild(cpenEnv);
+        mechanism.appendChild(letterWindow);
+        mechanism.appendChild(trigger);
+
+        cpen.appendChild(mechanism);
+        stage.appendChild(cpen);
+        wrap.appendChild(stage);
+
+        wrap._scatter = null; // scatter removed
+
+        this.givingCircleInviteEl = wrap;
+    }
+
+    resetGivingCircleInviteDock() {
+        if (!this.givingCircleInviteEl) return;
+        const wrap = this.givingCircleInviteEl;
+        [
+            '_sheetOpenTimer',
+            '_flapShutTimer',
+            '_flapOpenTimer',
+            '_stampReturnTimer',
+            '_expandTimer',
+            '_collapseTimer',
+            '_postFullscreenTimer',
+        ].forEach((key) => {
+            if (wrap[key]) {
+                window.clearTimeout(wrap[key]);
+                wrap[key] = null;
+            }
+        });
+        wrap.classList.remove(
+            'giving-circle-invite--sheet-open',
+            'giving-circle-invite--flap-open',
+            'giving-circle-invite--stamp-broken',
+            'giving-circle-invite--fullscreen'
+        );
+        document.body.classList.remove('giving-circle-fullscreen-lock');
+
+        /* If the sheet was reparented to <body> for fullscreen, return it
+           home and clear inline styles. Same for the backdrop. */
+        const stranded = document.body.querySelector('.giving-circle-invite-sheet--fullscreen');
+        if (stranded) {
+            const home = wrap.querySelector('.giving-circle-cpen-letter-window');
+            if (home) home.appendChild(stranded);
+            stranded.classList.remove('giving-circle-invite-sheet--fullscreen');
+            stranded.style.cssText = '';
+        }
+        const backdrop = document.body.querySelector('.giving-circle-invite-backdrop');
+        if (backdrop) document.body.removeChild(backdrop);
+
+        /* Remove the giving-circle-mode flag from the overlay. */
+        if (this.overlayElement) {
+            this.overlayElement.classList.remove('giving-circle-mode');
+        }
+
+        const trigger = wrap.querySelector('.giving-circle-invite-trigger');
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.setAttribute('aria-label', 'Open invitation');
+        }
+    }
+
+    syncGivingCircleInviteDock(stackId) {
+        if (stackId !== 'giving-circle') {
+            if (this.givingCircleInviteEl) {
+                this.resetGivingCircleInviteDock();
+            }
+            return;
+        }
+        if (this.givingCircleInviteEl) {
+            this.resetGivingCircleInviteDock();
+            this.containerElement.appendChild(this.givingCircleInviteEl);
+        }
     }
     
     // Special handler for CTX Mailbox - loads Substack articles
@@ -2095,20 +2624,14 @@ class CardStackSystem {
         
         this.blurLayer(1);
         
-        const cards = [
-            {
-                type: 'cover',
-                src: 'assets/givingcircleicon.png',
-                title: 'Giving Circle'
-            },
-            {
-                type: 'iframe',
-                src: 'https://docs.google.com/document/d/e/2PACX-1vT7INwiBNXyZcujg6QzFglz98JXVBQCPF8HK19Ga3KyVXYqhcPm9Tm7FP1ddlly1eo29htkh0E4-Oa7/pub?embedded=true',
-                title: 'Giving Circle'
-            }
-        ];
+        /* Flag the overlay so we can target it specifically in CSS — the
+           giving circle has no swipe cards, just the envelope + scatter. */
+        if (this.overlayElement) {
+            this.overlayElement.classList.add('giving-circle-mode');
+        }
         
-        this.createCardStack(cards, 'content', 'giving-circle', 'Giving Circle');
+        /* No pre-cards — the envelope IS the experience. */
+        this.createCardStack([], 'content', 'giving-circle', 'Giving Circle');
     }
     
     openMailboxStack() {
@@ -2368,8 +2891,17 @@ class CardStackSystem {
         
         // Scroll to top
         this.overlayElement.scrollTop = 0;
+
+        this.syncGivingCircleInviteDock(stackId);
     }
     
+    // Giving Circle skips the Layer 2 picker (only the doc stack), but layerHistory
+    // still has a synthetic Layer 2 entry for URL routing — treat as a single surface.
+    _isGivingCircleStandalone() {
+        const top = this.layerHistory[this.layerHistory.length - 1];
+        return this.currentLayer === 3 && top && top.id === 'giving-circle';
+    }
+
     // Update control buttons based on current layer
     updateControls(stackName = '') {
         // Check if this is a single-artifact case (Layer 3 with only 1 layer in history)
@@ -2389,7 +2921,7 @@ class CardStackSystem {
         // Set the title
         this.titleElement.textContent = displayTitle;
         
-        if (this.currentLayer === 3 && !isSingleArtifact) {
+        if (this.currentLayer === 3 && !isSingleArtifact && !this._isGivingCircleStandalone()) {
             // Back label should name the PARENT (Layer 2) artifact, not the current content
             const parentHistory = this.layerHistory.find(h => h.layer === 2);
             const parentName = parentHistory
@@ -2398,7 +2930,7 @@ class CardStackSystem {
             this.backSection.style.display = 'flex';
             this.backLabel.textContent = `Back to ${parentName}`;
         } else {
-            // Layer 2 (artifacts) or single-artifact case - hide back section
+            // Layer 2 (artifacts), single-artifact case, or Giving Circle (no picker layer)
             this.backSection.style.display = 'none';
         }
         
@@ -2736,22 +3268,13 @@ class CardStackSystem {
     
     // Blur a specific layer
     blurLayer(layer) {
-        if (layer === 1) {
-            // Blur dreamscape
-            const dreamscape = document.body;
-            dreamscape.classList.add('dreamscape-blurred');
-        } else if (layer === 2) {
-            // Blur artifact stack
-            // The cards will be blurred by CSS when Layer 3 opens
-        }
+        // Blurring is now handled by backdrop-filter on .card-stack-overlay.active —
+        // no per-element filter manipulation needed.
     }
     
     // Unblur a specific layer
     unblurLayer(layer) {
-        if (layer === 1) {
-            const dreamscape = document.body;
-            dreamscape.classList.remove('dreamscape-blurred');
-        }
+        // No-op: backdrop-filter on the overlay handles everything.
     }
     
     // Navigate back one layer
@@ -2759,8 +3282,13 @@ class CardStackSystem {
         console.log('🎴 Planeswalking back...');
         
         if (this.currentLayer === 3) {
-            // Going from Layer 3 → Layer 2
+            const top = this.layerHistory[this.layerHistory.length - 1];
+            const leavingGivingCircle = top && top.id === 'giving-circle';
             this.layerHistory.pop(); // Remove Layer 3
+            if (leavingGivingCircle) {
+                this.closeAll();
+                return;
+            }
             const previousLayer = this.layerHistory[this.layerHistory.length - 1];
             this.currentLayer = 2;
             
@@ -2784,6 +3312,9 @@ class CardStackSystem {
         
         // Clear overlay
         this.overlayElement.classList.remove('active');
+        if (this.givingCircleInviteEl) {
+            this.resetGivingCircleInviteDock();
+        }
         this.containerElement.innerHTML = '';
         
         // Unblur dreamscape

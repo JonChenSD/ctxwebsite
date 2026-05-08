@@ -1567,7 +1567,7 @@ body::before { content: none; }
     display: flex;
     align-items: center;
     gap: 20px;
-    z-index: 10002;
+    z-index: 200;
     box-shadow: 0 4px 20px rgba(245, 208, 41, 0.597);
 }
 
@@ -1974,20 +1974,11 @@ body::before { content: none; }
 .card-stack-overlay.active {
     display: flex;
     pointer-events: all;
-}
-
-/* Blur/fade effect for background layers */
-body.dreamscape-blurred > *:not(.card-stack-overlay) {
-    filter: blur(8px);
-    opacity: 0.5;
-    transition: filter 0.4s ease, opacity 0.4s ease;
-    pointer-events: none;
-}
-
-/* Ensure card stack overlay is NOT affected by blur */
-.card-stack-overlay {
-    filter: none !important;
-    opacity: 1 !important;
+    /* The overlay covers everything — backdrop-filter blurs the world behind it
+       (music player, nav, logo, dreamscape) without needing to touch each element. */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(10, 5, 2, 0.18);
 }
 
 .card-stack-container {
@@ -1998,6 +1989,19 @@ body.dreamscape-blurred > *:not(.card-stack-overlay) {
     flex-direction: column;
     align-items: center;
     gap: 30px;
+}
+
+/*
+   ------- Giving Circle mode -------
+   The overlay has no swipe-cards — just the envelope + scatter. On desktop we
+   trim the padding so the scatter images have breathing room but aren't buried
+   in the 200px card-stack gutters. On mobile we go fully edge-to-edge.
+*/
+.card-stack-overlay.giving-circle-mode .card-stack-container {
+    width: 100%;
+    padding: 100px 60px 60px;
+    justify-content: center;
+    min-height: 100svh;
 }
 
 /* Individual content cards - now static, not swipeable */
@@ -2395,6 +2399,700 @@ body.dreamscape-blurred > *:not(.card-stack-overlay) {
     white-space: nowrap;
 }
 
+/*
+   Giving Circle — CSS border-triangle envelope (from Coding-Star CodePen WNpbvwB),
+   kraft palette + click sequence (lids → letter) instead of :hover.
+
+   Z stack matches the pen’s foreground/background intent (WNpbvwB uses fixed z only;
+   we add preserve-3d + --flap-behind-letter so the outer lid can drop under the letter
+   after it finishes folding — same numeric layers as the reference where possible):
+   interior 0 < inner lid 1 < letter 2 < border face 3 < outer cover 4 (closed).
+*/
+.giving-circle-invite {
+    --cpen-z-interior: 0;
+    --cpen-z-inner-lid: 1;
+    --cpen-z-letter: 2;
+    --cpen-z-face: 3;
+    --cpen-z-outer-cover: 4;
+    /* One formula drives everything — only 16px breathing room from viewport edge.
+       Mobile breakpoints only adjust container padding, never these two variables. */
+    --giving-env-w: min(620px, calc(100vw - 16px));
+    --cpen-w: max(260px, calc(var(--giving-env-w) - 16px));
+    --cpen-h: calc(var(--cpen-w) * 200 / 300);
+    --cpen-half-w: calc(var(--cpen-w) / 2);
+    --cpen-half-h: calc(var(--cpen-h) / 2);
+
+    /* The sheet IS the letter (carries the full long copy). Inside the
+       envelope it's capped at --cpen-letter-card-h with overflow:hidden so
+       only the top of the letter shows; on open the sheet lifts UP further
+       (so more of the letter clears the envelope mouth), then expands to
+       fill the viewport and becomes scrollable. */
+    --cpen-letter-bottom: clamp(8px, 1.4vw, 16px);
+    /* Letter card visible inside envelope. Formula must stay below --cpen-h so the
+       card never overflows the letter-window's overflow:hidden clip region.
+       Old 240px minimum broke mobile (envelope can be ~210px tall at narrow widths).
+       85% of envelope height keeps the same visual ratio at every viewport size. */
+    --cpen-letter-card-h: clamp(80px, calc(var(--cpen-h) * 0.85), 340px);
+    --cpen-letter-lift: clamp(160px, calc(var(--cpen-h) * 0.85 + 40px), 360px);
+    --cpen-window-extension: calc(
+        var(--cpen-letter-card-h) + var(--cpen-letter-lift) - var(--cpen-h)
+            - var(--cpen-letter-bottom) + clamp(36px, 4.5vw, 56px)
+    );
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 56px;
+    margin-bottom: 28px;
+    scroll-margin-top: 24px;
+}
+
+.giving-circle-invite-stage {
+    position: relative;
+    width: var(--giving-env-w);
+    margin: 0 auto;
+    transition: min-height 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    min-height: 80px;
+    /* Always visible so the envelope/letter drop-shadows aren't clipped at the edges. */
+    overflow: visible;
+}
+
+.giving-circle-invite--sheet-open .giving-circle-invite-stage {
+    /* Match cpen growth: enough for window-extension + envelope + breathing room */
+    min-height: calc(
+        var(--cpen-h) + var(--cpen-window-extension) + clamp(40px, 5vw, 80px)
+    );
+}
+
+.giving-circle-cpen {
+    position: relative;
+    width: 100%;
+    padding: 12px 10px calc(var(--cpen-h) + 22px);
+    box-sizing: border-box;
+    /* Transparent — drop shadows live on the envelope itself + the letter,
+       not on a card behind them. */
+    background: transparent;
+    /* Closed: just the envelope is visible (small min-height keeps card compact). */
+    min-height: calc(var(--cpen-h) + clamp(40px, 6vw, 72px));
+    transition: min-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Open: grow card to make room for the letter rising above the envelope */
+.giving-circle-invite--sheet-open .giving-circle-cpen {
+    min-height: calc(
+        var(--cpen-h) + var(--cpen-window-extension) + clamp(30px, 4vw, 60px)
+    );
+}
+
+/* Mechanism box — matches CodePen 300×200 proportions (scaled by --cpen-w).
+   Note: transform-style stays 'flat' so child z-index strictly rules paint order
+   (preserve-3d would composite by 3D depth and bury the letter behind translateZ’d
+   lids regardless of z-index). The single-axis rotateX on each lid still renders
+   3D thanks to `perspective` here. */
+.giving-circle-cpen-mechanism {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: var(--cpen-w);
+    height: var(--cpen-h);
+    transform: translateX(-50%);
+    perspective: min(1400px, calc(var(--cpen-w) * 2.6));
+    perspective-origin: 50% 0;
+    z-index: 3;
+}
+
+/* Fills the transparent center of the border-triangle envelope (no dreamscape bleed-through).
+   Doubles as the envelope's outer drop shadow: this rectangle matches the envelope's
+   silhouette, so its outer box-shadow reads as the envelope's shadow on the page. */
+.giving-circle-cpen-mechanism::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--cpen-z-interior);
+    border-radius: 3px;
+    background: linear-gradient(165deg, #ebe3d4 0%, #d8cbb4 38%, #c9b896 72%, #b8a684 100%);
+    box-shadow:
+        inset 0 0 0 1px rgba(90, 70, 48, 0.08),
+        0 22px 44px rgba(40, 25, 10, 0.22),
+        0 8px 16px rgba(40, 25, 10, 0.14),
+        0 2px 4px rgba(40, 25, 10, 0.10);
+    pointer-events: none;
+}
+
+.giving-circle-cpen-lid {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-right: var(--cpen-half-w) solid transparent;
+    border-bottom: var(--cpen-half-h) solid transparent;
+    border-left: var(--cpen-half-w) solid transparent;
+    transform-origin: top;
+    transition: transform 0.28s linear;
+    box-sizing: border-box;
+}
+
+/* Outer lid — same role as .lid.one in WNpbvwB (z 3 there = “cover”; we use 4 above face) */
+.giving-circle-cpen-lid--one {
+    border-top: var(--cpen-half-h) solid #dcc7a8;
+    transform: rotateX(0deg);
+    z-index: var(--cpen-z-outer-cover);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* Inner lid — same as .lid.two in WNpbvwB (z 1, behind letter) */
+.giving-circle-cpen-lid--two {
+    border-top: var(--cpen-half-h) solid #c4a882;
+    transform: rotateX(90deg);
+    z-index: var(--cpen-z-inner-lid);
+    pointer-events: none;
+}
+
+.giving-circle-invite:not(.giving-circle-invite--flap-open) .giving-circle-cpen-lid--one {
+    transition-delay: 0.72s;
+}
+
+.giving-circle-invite:not(.giving-circle-invite--flap-open) .giving-circle-cpen-lid--two {
+    transition-delay: 0.48s;
+}
+
+.giving-circle-invite--flap-open .giving-circle-cpen-lid--one {
+    transform: rotateX(90deg);
+    transition-delay: 0s;
+    pointer-events: none;
+}
+
+.giving-circle-invite--flap-open .giving-circle-cpen-lid--two {
+    transform: rotateX(180deg);
+    transition-delay: 0.26s;
+}
+
+/* When the letter starts sliding out, drop the (now edge-on) outer lid behind
+   the letter and tuck the flipped inner lid even further back, so the letter
+   reads as rising IN FRONT of both flaps (the desired "letter above flap" feel). */
+.giving-circle-invite--sheet-open .giving-circle-cpen-lid--one,
+.giving-circle-invite--sheet-open .giving-circle-cpen-lid--two {
+    z-index: var(--cpen-z-inner-lid);
+}
+
+.giving-circle-cpen-env {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-top: var(--cpen-half-h) solid transparent;
+    border-right: var(--cpen-half-w) solid #d2bc9a;
+    border-bottom: var(--cpen-half-h) solid #a88758;
+    border-left: var(--cpen-half-w) solid #c9ab82;
+    z-index: var(--cpen-z-face);
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+/*
+   Letter "envelope pocket" — overflow:hidden window that defines what's visible
+   of the tall sheet inside.
+   - Closed: window = envelope bounds (top:0, bottom:0). Sheet inside is
+     bottom-anchored and tall, so its top extends above the window and is
+     clipped. Front face (z 3) hides the in-envelope portion; nothing pokes
+     above the envelope visually.
+   - Open: window's top transitions to a negative value, expanding upward;
+     the sheet inside translates up. Result: the letter "rises" out of the
+     envelope opening.
+   Window sits at z 2 (between kraft interior at 0 and front face at 3, and —
+   after the outer flap finishes opening and drops to z 1 — above that flap).
+*/
+.giving-circle-cpen-letter-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: var(--cpen-z-letter);
+    pointer-events: none;
+    transform: translateZ(0);
+    transform-style: flat;
+    transition: top 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.giving-circle-invite--sheet-open .giving-circle-cpen-letter-window {
+    top: calc(0px - var(--cpen-window-extension));
+}
+
+/* Letter "paper" look — applies wherever the sheet lives in the DOM. JS
+   reparents the sheet to <body> for the fullscreen expand, so these styles
+   need to be on the bare element, not on the parent-scoped selector. */
+.giving-circle-invite-sheet {
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #fffef9 0%, #faf6ee 100%);
+    border: 1px solid rgba(60, 40, 20, 0.14);
+    border-radius: clamp(10px, 1.2vw, 14px);
+    box-shadow:
+        0 14px 32px rgba(40, 25, 10, 0.20),
+        0 4px 10px rgba(40, 25, 10, 0.12),
+        0 1px 2px rgba(40, 25, 10, 0.08);
+    font-family: 'GT Pressura', Georgia, serif;
+    font-size: clamp(15px, 0.35rem + 1.1vw, 19px);
+    line-height: 1.55;
+    color: #2a2418;
+    pointer-events: auto;
+}
+
+.giving-circle-cpen-letter-window .giving-circle-invite-sheet {
+    /* Bottom-anchored in the window: capped at --cpen-letter-card-h with
+       overflow:hidden so only the top of the long letter is visible — the
+       rest is reserved for the fullscreen expand (where it scrolls). */
+    position: absolute;
+    left: 50%;
+    bottom: var(--cpen-letter-bottom);
+    top: auto;
+    width: min(92%, calc(var(--cpen-w) * 0.9));
+    max-width: calc(var(--cpen-w) * 0.96);
+    height: var(--cpen-letter-card-h);
+    max-height: var(--cpen-letter-card-h);
+    overflow: hidden;
+    margin: 0;
+    padding: clamp(20px, 3.4vw, 32px) clamp(16px, 4vw, 28px)
+        clamp(18px, 3vw, 26px);
+    transform: translate(-50%, 0);
+    /* On CLOSE: transform slides the letter back down (0.62s) and opacity only
+       snaps to 0 after the transform finishes (0s duration, 0.62s delay).
+       This lets overflow:hidden on the letter-window clip the letter as it
+       slides in, making it look like it's going back into the envelope rather
+       than fading out in mid-air. The open-state rule below overrides with a
+       quick fade-in so opening still feels snappy. */
+    transition:
+        transform 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity   0s    0.62s;
+
+    /* opacity:0 keeps the letter invisible inside the closed envelope.
+       Required because rotateX() on the lids creates 3D compositing layers
+       that can break z-index paint order (mobile Safari etc). */
+    opacity: 0;
+}
+
+.giving-circle-invite--sheet-open .giving-circle-cpen-letter-window .giving-circle-invite-sheet {
+    transform: translate(-50%, calc(0px - var(--cpen-letter-lift)));
+    /* Fade the letter in as it begins to rise out of the envelope. */
+    opacity: 1;
+    transition:
+        transform 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity   0.18s ease 0.08s;
+}
+
+.giving-circle-invite-dear {
+    font-style: italic;
+    margin: 0 0 clamp(12px, 2.2vw, 16px);
+    color: #5c4a38;
+}
+
+.giving-circle-invite-sheet p {
+    margin: 0 0 clamp(10px, 1.8vw, 14px);
+}
+
+.giving-circle-invite-signoff {
+    margin-top: 20px !important;
+    font-style: italic;
+    color: #5c4a38;
+}
+
+/*
+   "Open Invitation" stamp — sits on the closed flap (above z 4 cover) and fades
+   quickly on click before the flap rotates open (`--stamp-broken` class).
+*/
+.giving-circle-invite-stamp {
+    position: absolute;
+    top: clamp(14px, 2.4vw, 30px);
+    left: 50%;
+    bottom: auto;
+    z-index: 11;
+
+    width: clamp(96px, 22vw, 132px);
+    height: clamp(96px, 22vw, 132px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2px, 0.4vw, 4px);
+    padding: 0;
+
+    background: transparent;
+    border: 3px solid #b22842;
+    border-radius: 50%;
+
+    color: #b22842;
+    font-family: 'Maru', 'GT Pressura', 'Courier New', monospace;
+    font-size: clamp(13px, 1.7vw, 16px);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    text-align: center;
+
+    /* Inset double-ring + ink-bleed feel */
+    box-shadow:
+        inset 0 0 0 4px rgba(178, 40, 66, 0.14),
+        inset 0 0 14px rgba(178, 40, 66, 0.18),
+        0 1px 2px rgba(0, 0, 0, 0.08);
+    /* Mild distress so it reads stamped (not painted) */
+    opacity: 0.93;
+
+    cursor: pointer;
+    transform: translateX(-50%) rotate(-7deg);
+    transition: opacity 0.28s ease,
+        transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.giving-circle-invite-stamp:hover {
+    opacity: 1;
+    transform: translateX(-50%) rotate(-7deg) scale(1.05);
+}
+
+.giving-circle-invite-stamp:active {
+    transform: translateX(-50%) rotate(-7deg) scale(0.96);
+}
+
+.giving-circle-invite-stamp-line {
+    display: block;
+}
+
+/* Stamp "breaks" / fades quickly on click (added before --flap-open). */
+.giving-circle-invite--stamp-broken .giving-circle-invite-stamp {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) rotate(-14deg) scale(0.78);
+    transition-duration: 0.26s;
+}
+
+/*
+   Foldback ("×") button at top-right of the open letter — clipped by the letter
+   window when closed, revealed once the letter slides out.
+*/
+.giving-circle-invite-foldback {
+    position: absolute;
+    top: clamp(10px, 1.6vw, 16px);
+    right: clamp(10px, 1.6vw, 16px);
+    z-index: 5;
+
+    width: auto;
+    height: auto;
+    padding: 4px 6px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+
+    color: rgba(92, 74, 56, 0.55);
+    font-family: 'GT Pressura', Georgia, serif;
+    font-size: clamp(20px, 2.6vw, 26px);
+    line-height: 1;
+    cursor: pointer;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.86);
+    transition: opacity 0.32s ease, transform 0.32s ease, color 0.18s ease;
+}
+
+.giving-circle-invite-foldback:hover {
+    color: rgba(92, 74, 56, 1);
+    transform: scale(1.08);
+    background: none;
+}
+
+.giving-circle-invite--sheet-open .giving-circle-invite-foldback {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    /* Appear after the letter has mostly cleared the envelope opening. */
+    transition-delay: 0.45s;
+}
+
+/*
+   ------- Letter typography -------
+   The sheet IS the letter and carries the full long copy. These rules are
+   scoped to .giving-circle-invite-sheet so they apply both inside the
+   envelope (where only the top is visible) and once the sheet is reparented
+   to <body> for the fullscreen expand.
+*/
+.giving-circle-invite-sheet .invite-fs-section + .invite-fs-section {
+    margin-top: clamp(28px, 4vw, 48px);
+    padding-top: clamp(22px, 3.4vw, 38px);
+    border-top: 1px dashed rgba(120, 80, 40, 0.22);
+}
+
+.giving-circle-invite-sheet .invite-fs-hook .invite-fs-lede {
+    font-family: 'Maru', 'GT Pressura', sans-serif;
+    font-size: clamp(18px, 0.5rem + 1.2vw, 26px);
+    line-height: 1.35;
+    color: #5c3a18;
+    margin: 0 0 clamp(12px, 1.6vw, 18px);
+    letter-spacing: -0.01em;
+}
+
+.giving-circle-invite-sheet h3 {
+    font-family: 'Maru', 'GT Pressura', sans-serif;
+    font-size: clamp(18px, 0.5rem + 1.2vw, 26px);
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 clamp(14px, 1.8vw, 20px);
+    color: #5c3a18;
+    letter-spacing: -0.01em;
+}
+
+.giving-circle-invite-sheet h4 {
+    font-family: 'Maru', 'GT Pressura', sans-serif;
+    font-size: clamp(14px, 0.35rem + 0.85vw, 18px);
+    font-weight: 700;
+    margin: clamp(18px, 2.2vw, 26px) 0 clamp(6px, 0.9vw, 10px);
+    color: #7a4f24;
+    text-transform: lowercase;
+    letter-spacing: 0.01em;
+}
+
+.giving-circle-invite-sheet p {
+    margin: 0 0 clamp(10px, 1.4vw, 14px);
+}
+
+.invite-fs-tag {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #b22842;
+    margin-left: 4px;
+    font-size: 0.78em;
+    letter-spacing: 0.04em;
+}
+
+.invite-fs-list {
+    list-style: none;
+    margin: 0 0 clamp(16px, 2vw, 22px);
+    padding: 0;
+}
+
+.invite-fs-list li {
+    position: relative;
+    padding-left: clamp(18px, 2.2vw, 24px);
+    margin-bottom: clamp(8px, 1.2vw, 12px);
+}
+
+.invite-fs-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b22842;
+    opacity: 0.7;
+}
+
+.invite-fs-list--tight li {
+    margin-bottom: clamp(5px, 0.7vw, 8px);
+}
+
+.invite-fs-checklist li::before {
+    width: 7px;
+    height: 7px;
+    border-radius: 0;
+    background: transparent;
+    border: 1.5px solid #b22842;
+    top: 0.55em;
+}
+
+.invite-fs-example {
+    margin-top: clamp(18px, 2.4vw, 26px);
+    padding: clamp(14px, 2vw, 22px) clamp(18px, 2.4vw, 26px);
+    background: rgba(184, 38, 74, 0.06);
+    border-left: 3px solid #b22842;
+    border-radius: 6px;
+}
+
+.invite-fs-example-label {
+    font-family: 'Maru', 'GT Pressura', sans-serif;
+    font-weight: 700;
+    color: #5c3a18;
+    margin: 0 0 clamp(8px, 1.2vw, 12px) !important;
+    letter-spacing: 0.01em;
+}
+
+.invite-fs-example .invite-fs-list {
+    margin-bottom: 0;
+}
+
+.invite-fs-closing {
+    margin: clamp(24px, 3vw, 36px) 0 0 !important;
+    font-family: 'Maru', 'GT Pressura', sans-serif;
+    font-size: clamp(17px, 0.45rem + 1.1vw, 22px);
+    font-style: italic;
+    color: #5c3a18;
+    text-align: center;
+}
+
+/* ---- Stewards portrait grid ---- */
+.invite-fs-stewards-section {
+    border-top: 1px dashed rgba(92, 74, 56, 0.2);
+    padding-top: clamp(20px, 3vw, 32px) !important;
+}
+
+.invite-fs-stewards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 3vw, 28px);
+    margin-top: clamp(20px, 2.5vw, 28px);
+}
+
+.invite-fs-steward {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.invite-fs-steward img {
+    width: 100%;
+    max-width: 140px;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    /* Blend the sketch's off-white background into the letter */
+    mix-blend-mode: multiply;
+}
+
+.invite-fs-steward-name {
+    margin: 0 !important;
+    font-family: 'GT Pressura', sans-serif;
+    font-size: clamp(12px, 1.4vw, 14px);
+    font-weight: 600;
+    color: #5c4a38;
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+
+/*
+   ------- Sheet in fullscreen state -------
+   When the user opens the invitation, JS snapshots the small letter's rect,
+   reparents the sheet to <body> (to escape the envelope's perspective
+   containing block), pins it to that rect, then animates top/left/width/
+   height to viewport-fill. CSS here only sets the look in the fullscreen
+   state — the size/position is controlled inline by JS.
+*/
+.giving-circle-invite-sheet--fullscreen {
+    /* Once reparented to <body> for fullscreen the parent rule that sets
+       opacity:0 no longer applies, but be explicit to be safe. */
+    opacity: 1 !important;
+    /* Larger padding for comfortable reading; transitions interpolate
+       padding/border-radius/shadow from the small-letter values. */
+    padding: clamp(36px, 5vw, 64px) clamp(22px, 4vw, 52px) clamp(40px, 5vw, 64px) !important;
+    border-radius: clamp(12px, 1.6vw, 18px) !important;
+    box-shadow:
+        0 40px 80px rgba(20, 12, 4, 0.40),
+        0 14px 28px rgba(20, 12, 4, 0.22),
+        0 2px 6px rgba(20, 12, 4, 0.14) !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.giving-circle-invite-sheet--fullscreen.giving-circle-invite-sheet {
+    font-size: clamp(15px, 0.4rem + 0.85vw, 18px);
+    line-height: 1.65;
+}
+
+.giving-circle-invite-sheet--fullscreen .invite-fs-section + .invite-fs-section {
+    margin-top: clamp(36px, 5vw, 56px);
+    padding-top: clamp(28px, 4vw, 44px);
+}
+
+.giving-circle-invite-sheet--fullscreen .invite-fs-hook .invite-fs-lede,
+.giving-circle-invite-sheet--fullscreen h3 {
+    font-size: clamp(20px, 0.55rem + 1.5vw, 28px);
+}
+
+/*
+   ------- Backdrop behind the fullscreen letter -------
+   Transparent surface that catches click-outside-to-close events. No dim,
+   no blur — the letter sits directly over the dreamscape.
+*/
+.giving-circle-invite-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.giving-circle-invite-backdrop--visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Foldback (close) button is pinned to the viewport's top-right corner when
+   the sheet is fullscreen, so it stays visible while the user scrolls. JS
+   reparents the sheet (with foldback as its child) to <body> for the
+   fullscreen expand, so this rule lives on the sheet's class. */
+.giving-circle-invite-sheet--fullscreen .giving-circle-invite-foldback {
+    /* Stay absolute (not fixed) so the button rides WITH the sheet during the
+       FLIP animation — no hard jump. The sheet is position:fixed so its
+       padding-box is the containing block; absolute here is visually identical
+       to fixed but moves with the card instead of tearing away from it. */
+    position: absolute;
+    top: clamp(14px, 2.5vh, 24px);
+    right: clamp(14px, 2.5vw, 24px);
+    width: auto;
+    height: auto;
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    transition-delay: 0s;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    font-size: clamp(24px, 3vw, 32px);
+    color: rgba(92, 74, 56, 0.6);
+    z-index: 1;
+}
+
+/* Prevent the page behind the fullscreen letter from scrolling. */
+body.giving-circle-fullscreen-lock {
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .giving-circle-invite-sheet,
+    .giving-circle-invite-stage,
+    .giving-circle-cpen,
+    .giving-circle-cpen-letter-window,
+    .giving-circle-cpen-lid,
+    .giving-circle-invite-stamp,
+    .giving-circle-invite-foldback,
+    .giving-circle-invite-backdrop {
+        transition-duration: 0.01ms;
+    }
+}
+
+/* -------- Giving Circle — compact layout (no scatter) ≤900px -------- */
+@media (max-width: 900px) {
+    /* Remove the large desktop padding that was designed around scatter images
+       occupying the side margins. Below 900px scatter is hidden so the envelope
+       should simply be centered with comfortable breathing room. */
+    .card-stack-overlay.giving-circle-mode .card-stack-container {
+        padding: 80px 24px 48px;
+        width: 100%;
+        min-height: 100svh;
+        justify-content: center;
+    }
+
+    .card-stack-overlay.giving-circle-mode .giving-circle-invite-stage {
+        margin: 0 auto;
+    }
+}
+
 /* Mobile Responsive Styles */
 @media screen and (max-width: 768px) {
     /* CTX Logo - Top left on mobile */
@@ -2624,6 +3322,41 @@ body.dreamscape-blurred > *:not(.card-stack-overlay) {
     .card-stack-container {
         width: 100%;
         padding: 80px 12px 100px;
+    }
+
+    /* Giving Circle fullscreen close — slightly larger tap area on mobile */
+    .giving-circle-invite-sheet--fullscreen .giving-circle-invite-foldback {
+        top: 12px;
+        right: 12px;
+        font-size: 26px;
+    }
+
+    /* Fullscreen letter — tighter padding on narrow screens so more copy shows */
+    .giving-circle-invite-sheet--fullscreen {
+        padding: 56px 20px 32px !important;
+        border-radius: 10px !important;
+    }
+
+    /* Slightly smaller body copy for comfortable line lengths on phones */
+    .giving-circle-invite-sheet--fullscreen.giving-circle-invite-sheet {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    /* On true mobile (≤768px) giving-circle-mode goes fully edge-to-edge */
+    .card-stack-overlay.giving-circle-mode .card-stack-container {
+        padding: 68px 0 24px;
+    }
+
+    .giving-circle-invite {
+        margin-top: 48px;
+        margin-bottom: 24px;
+    }
+
+    .giving-circle-invite--sheet-open .giving-circle-invite-stage {
+        min-height: calc(
+            var(--cpen-letter-card-h) + var(--cpen-letter-lift) + clamp(48px, 6vw, 72px)
+        );
     }
     
     /* Cards - Better mobile sizing */
