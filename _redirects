@@ -1,0 +1,2 @@
+# Netlify redirects (also works on Cloudflare Pages with _redirects support)
+/generator          /generator/index.html                  200
