@@ -105,9 +105,16 @@ body.modal-open {
   overflow: hidden;
 }
 
-html.app-published-root,
+html.app-published-root {
+  height: 100%;
+}
+
 body.app-published {
-  touch-action: pan-x pan-y pinch-zoom;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
 }
 
 /* ── Generator chrome ──────────────────────────────────────────────── */
@@ -803,15 +810,17 @@ body.app-published {
 /* ── Published form chrome ─────────────────────────────────────────── */
 
 .app--published {
-  display: block;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   grid-template-columns: 1fr;
+  min-height: 0;
 }
 
 .published-toolbar {
   background: var(--ui-surface);
   border-bottom: 1px solid var(--ui-border);
-  position: sticky;
-  top: 0;
+  flex-shrink: 0;
   z-index: 20;
 }
 
@@ -926,8 +935,10 @@ body.app-published {
   --published-scale: calc(var(--published-fit-scale) * var(--published-user-zoom));
   align-items: center;
   -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
   padding: 12px 8px 32px;
   padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   touch-action: pan-x pan-y pinch-zoom;
