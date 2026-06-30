@@ -2,9 +2,26 @@
  * Youth Artist Giving Circle — Invitation & Self-Assessment content.
  * Placeholders: {place}, {deadline}, {email}, {location}
  */
+export const LOCATION_CONFIGS = {
+  germantown: {
+    place: 'Germantown',
+    deadline: 'Friday, July 17th',
+    email: 'bkindfamilyservices@gmail.com',
+    location:
+      "d'griot cafe + gallery — 51 Maplewood Mall, Germantown, Philadelphia 19144. Please put in an envelope and drop in the mailbox.",
+  },
+  rhinelander: {
+    place: 'Rhinelander',
+    deadline: 'Friday, July 17th',
+    email: 'mchilds@artstartrhinelander.org',
+    location:
+      'ArtStart — 68 S Stevens Street, Rhinelander, WI 54501. Mail or drop off with a gallery volunteer during open hours (Thurs–Sat 11–4).',
+  },
+};
+
 export const PLACE_PRESETS = {
-  germantown: { label: 'Germantown', place: 'Germantown' },
-  rhinelander: { label: 'Rhinelander', place: 'Rhinelander' },
+  germantown: { label: 'Germantown', ...LOCATION_CONFIGS.germantown },
+  rhinelander: { label: 'Rhinelander', ...LOCATION_CONFIGS.rhinelander },
   template: { label: 'Blank template', place: '[Your neighborhood]' },
 };
 
@@ -256,6 +273,9 @@ export function buildDocumentPages(vars) {
         ...q,
         text: p(q.text),
       })),
+    },
+    {
+      type: 'submission',
       footer: {
         website: 'To learn more about culture therapy, visit: https://culturetherapy.plus/',
         websiteNote:

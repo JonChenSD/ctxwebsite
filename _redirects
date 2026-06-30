@@ -1,2 +1,6 @@
 # Netlify redirects (also works on Cloudflare Pages with _redirects support)
 /generator          /generator/index.html                  200
+/givingcircle/germantown    /givingcircle/germantown/index.html    200
+/givingcircle/germantown/   /givingcircle/germantown/index.html    200
+/givingcircle/rhinelander   /givingcircle/rhinelander/index.html   200
+/givingcircle/rhinelander/  /givingcircle/rhinelander/index.html   200

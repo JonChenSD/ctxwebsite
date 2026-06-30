@@ -2178,7 +2178,8 @@ class CardStackSystem {
                     <li>you can envision how to connect to a collaborator &mdash; an organization that is a trusted place for young people where they participate in art and creative expression.</li>
                     <li>you are ready to ensure the spirit and intentions of the work remain intact as the circle takes shape.</li>
                 </ul>
-                <p class="invite-fs-closing">if you're nodding, keep going.</p>
+                <p class="invite-fs-closing">stay tuned, as we'll be updating this invitation in june with more information about ways to take action in your community.</p>
+                <p class="invite-fs-closing invite-fs-closing--contact">feel free to contact us if any of this excites you at <a href="mailto:workwithus@culturetherapy.plus" class="invite-fs-email">workwithus@culturetherapy.plus</a></p>
             </section>
         `;
 

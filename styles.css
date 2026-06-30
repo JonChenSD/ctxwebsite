@@ -2928,10 +2928,27 @@ body::before { content: none; }
 .invite-fs-closing {
     margin: clamp(24px, 3vw, 36px) 0 0 !important;
     font-family: 'Maru', 'GT Pressura', sans-serif;
-    font-size: clamp(17px, 0.45rem + 1.1vw, 22px);
+    font-size: clamp(15px, 0.4rem + 0.9vw, 18px);
     font-style: italic;
     color: #5c3a18;
     text-align: center;
+}
+
+.invite-fs-closing--contact {
+    margin-top: clamp(12px, 1.5vw, 18px) !important;
+}
+
+.invite-fs-email {
+    color: #b22842;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-style: normal;
+    white-space: nowrap;
+    transition: color 0.18s ease;
+}
+
+.invite-fs-email:hover {
+    color: #7a1a2e;
 }
 
 /* ---- Stewards portrait grid ---- */

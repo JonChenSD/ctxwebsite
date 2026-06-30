@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-asset-base="../..">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5, viewport-fit=cover">
+  <title>Youth Artist Giving Circle — Rhinelander</title>
+  <meta name="description" content="Invitation and self-assessment for the Rhinelander Youth Artist Giving Circle.">
+  <link rel="preload" href="../../fonts/GT-Pressura-Standard-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fonts/GT-Pressura-Standard-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fonts/GT-Maru-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="../../generator/generator.css?v=20250703">
+  <script>window.GC_LOCATION = 'rhinelander';</script>
+</head>
+<body class="app-published modal-open">
+  <div class="welcome-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-modal-card">
+      <h2 class="welcome-modal-title" id="welcomeTitle">
+        Hi — welcome to the <span id="welcomePlace"></span> Youth Artist-led Giving Circle
+      </h2>
+      <div class="welcome-modal-body">
+        <p>
+          After filling out the form digitally, please download your completed PDF and email it to
+          <strong id="welcomeEmail"></strong> by <strong id="welcomeDeadline"></strong>.
+        </p>
+        <p>
+          Alternatively, you can print this document and drop it off at
+          <strong id="welcomeLocation"></strong> by <strong id="welcomeDropDeadline"></strong>.
+        </p>
+      </div>
+      <div class="welcome-modal-actions">
+        <button type="button" class="btn btn-secondary" id="welcomePrint">Print this form</button>
+        <button type="button" class="btn btn-primary" id="welcomeDigital">Fill out digitally</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="published-toolbar">
+    <div class="published-toolbar-inner">
+      <span class="published-toolbar-title">Youth Artist Giving Circle — Rhinelander</span>
+      <div class="published-toolbar-actions">
+        <button type="button" class="btn btn-secondary btn-sm" id="pub-btn-print">Print</button>
+        <button type="button" class="btn btn-primary btn-sm" id="pub-btn-pdf">Download PDF</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="pub-btn-reset">Clear</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app app--published" inert>
+    <main class="preview-area preview-area--published">
+      <div class="doc-stack" id="docStack"></div>
+    </main>
+  </div>
+
+  <script src="../../generator/vendor/html2canvas.min.js"></script>
+  <script src="../../generator/vendor/jspdf.umd.min.js"></script>
+  <script type="module" src="../../generator/generator.js?v=20250703"></script>
+</body>
+</html>
