@@ -963,15 +963,21 @@ body.app-published {
 .preview-area--published .doc-stack {
   align-items: center;
   box-sizing: border-box;
-  gap: calc(16px * var(--published-scale));
+  /* Gap is unreliable when children use CSS zoom — space via margin instead. */
+  gap: 0;
   margin-inline: auto;
   min-width: 100%;
   width: max-content;
 }
 
 .preview-area--published .doc-page {
-  margin: 0;
+  /* Divide by scale so zoomed margins still read as ~24px on screen. */
+  margin: 0 0 calc(24px / var(--published-scale));
   zoom: var(--published-scale);
+}
+
+.preview-area--published .doc-page:last-child {
+  margin-bottom: 0;
 }
 
 @supports not (zoom: 1) {
@@ -982,9 +988,15 @@ body.app-published {
   }
 
   .preview-area--published .doc-page {
-    margin-bottom: calc(var(--doc-height) * (var(--published-scale) - 1));
+    margin-bottom: calc(
+      var(--doc-height) * (var(--published-scale) - 1) + 24px
+    );
     transform: scale(var(--published-scale));
     transform-origin: top left;
+  }
+
+  .preview-area--published .doc-page:last-child {
+    margin-bottom: calc(var(--doc-height) * (var(--published-scale) - 1));
   }
 }
 
