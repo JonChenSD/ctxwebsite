@@ -713,6 +713,22 @@ body.app-published {
   height: 9mm;
 }
 
+/* Print/PDF stand-in for the textarea, which cannot be captured or printed. */
+.reflection-typed {
+  display: none;
+  font-family: var(--font);
+  font-size: var(--type-body);
+  height: 45mm;
+  left: 0;
+  line-height: 9mm;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  position: absolute;
+  top: 0;
+  white-space: pre-wrap;
+  width: 100%;
+}
+
 .reflection-footer {
   border-top: 2px solid var(--ctx-blue);
   font-size: var(--type-small);
@@ -1195,9 +1211,35 @@ body.app-published {
     display: block;
   }
 
+  /* The published layout confines scrolling to the document area, which would
+     otherwise clip the printout to a single page. */
+  html.app-published-root {
+    height: auto;
+  }
+
+  body.app-published {
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .app--published {
+    display: block;
+  }
+
   .preview-area {
     background: white;
     padding: 0;
+  }
+
+  .preview-area--published {
+    --published-fit-scale: 1 !important;
+    --published-user-zoom: 1 !important;
+    flex: none;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
   }
 
   .doc-stack {
@@ -1222,6 +1264,10 @@ body.app-published {
 
   .reflection-item textarea {
     display: none;
+  }
+
+  .reflection-typed {
+    display: block;
   }
 
   .rating-scale input[type='radio'] {

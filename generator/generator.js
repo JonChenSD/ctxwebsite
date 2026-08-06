@@ -181,6 +181,7 @@ function renderReflectionPage(page, pageNum) {
             <span class="reflection-line"></span>
             <span class="reflection-line"></span>
           </div>
+          <div class="reflection-typed" data-answer-for="reflection-${q.num}" aria-hidden="true"></div>
         </div>
       </div>`
     )
@@ -302,8 +303,56 @@ function render() {
   const saved = captureFormState();
   stack.innerHTML = renderDocument();
   restoreFormState(saved);
+  applyTypedAnswers(document);
   syncControlsFromState();
   if (isPublishedMode) lockPublishedFormFocus();
+}
+
+/* Field values live only as DOM properties, so neither print stylesheets nor
+   html2canvas clones can see them. Mirror answers into plain elements. */
+function applyTypedAnswers(root = document) {
+  $$('.reflection-typed', root).forEach((mirror) => {
+    const name = mirror.dataset.answerFor;
+    const live = $(`#docStack textarea[name="${name}"]`);
+    const local = $(`textarea[name="${name}"]`, root);
+    mirror.textContent = live?.value ?? local?.value ?? '';
+  });
+}
+
+function copyLiveFormValues(root) {
+  $$('.submission-input', root).forEach((el) => {
+    const live = $(`#docStack input[name="${el.name}"]`);
+    if (live) {
+      el.value = live.value;
+      el.setAttribute('value', live.value);
+    }
+  });
+
+  $$('input[type="radio"]', root).forEach((el) => {
+    const live = $(`#docStack input[name="${el.name}"][value="${el.value}"]`);
+    if (!live) return;
+    el.checked = live.checked;
+    if (live.checked) el.setAttribute('checked', '');
+    else el.removeAttribute('checked');
+  });
+
+  $$('textarea', root).forEach((el) => {
+    const live = $(`#docStack textarea[name="${el.name}"]`);
+    if (live) el.value = live.value;
+  });
+}
+
+function bindTypedAnswerSync() {
+  $('#docStack')?.addEventListener('input', (event) => {
+    if (
+      event.target.matches('.reflection-item textarea') ||
+      event.target.matches('.submission-input')
+    ) {
+      applyTypedAnswers(document);
+    }
+  });
+
+  window.addEventListener('beforeprint', () => applyTypedAnswers(document));
 }
 
 function captureFormState() {
@@ -363,6 +412,7 @@ function clearFormResponses() {
   $$('#docStack .submission-input').forEach((el) => {
     el.value = '';
   });
+  applyTypedAnswers(document);
 }
 
 function bindBuilderEvents() {
@@ -380,10 +430,14 @@ function bindBuilderEvents() {
   });
 
   bindActionButtons('#btn-print', '#btn-pdf', '#btn-reset');
+  bindTypedAnswerSync();
 }
 
 function bindActionButtons(printSel, pdfSel, resetSel) {
-  $(printSel)?.addEventListener('click', () => window.print());
+  $(printSel)?.addEventListener('click', () => {
+    applyTypedAnswers(document);
+    window.print();
+  });
 
   $(pdfSel)?.addEventListener('click', async () => {
     const btn = $(pdfSel);
@@ -623,12 +677,66 @@ function bindPublishedEvents() {
   bindActionButtons('#pub-btn-print', '#pub-btn-pdf', '#pub-btn-reset');
   bindPublishedZoom();
   bindPublishedPinchZoom();
+  bindTypedAnswerSync();
   bindWelcomeModal();
 }
 
 function pdfPageBackground(pageEl) {
   if (pageEl.classList.contains('doc-page--cover')) return '#4c75df';
   return '#ffffff';
+}
+
+/* html2canvas measures the live element but renders a clone that ignores CSS
+   zoom, so the preview has to sit at natural A4 size during capture. */
+function withNaturalPageScale() {
+  const area = $('.preview-area--published');
+  const pages = $$('.doc-page');
+  const previous = pages.map((el) => ({
+    el,
+    zoom: el.style.zoom,
+    transform: el.style.transform,
+    marginBottom: el.style.marginBottom,
+    width: el.style.width,
+    height: el.style.height,
+  }));
+
+  const userZoom = area?.style.getPropertyValue('--published-user-zoom') || '';
+  const fitScale = area?.style.getPropertyValue('--published-fit-scale') || '';
+
+  if (area) {
+    area.style.setProperty('--published-fit-scale', '1');
+    area.style.setProperty('--published-user-zoom', '1');
+  }
+
+  pages.forEach((el) => {
+    el.style.zoom = '1';
+    el.style.transform = 'none';
+    el.style.marginBottom = '0';
+    el.style.width = '210mm';
+    el.style.height = '297mm';
+  });
+
+  return () => {
+    if (area) {
+      if (fitScale) area.style.setProperty('--published-fit-scale', fitScale);
+      else area.style.removeProperty('--published-fit-scale');
+      if (userZoom) area.style.setProperty('--published-user-zoom', userZoom);
+      else area.style.removeProperty('--published-user-zoom');
+    }
+    previous.forEach(({ el, zoom, transform, marginBottom, width, height }) => {
+      el.style.zoom = zoom;
+      el.style.transform = transform;
+      el.style.marginBottom = marginBottom;
+      el.style.width = width;
+      el.style.height = height;
+    });
+  };
+}
+
+function nextFrame() {
+  return new Promise((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(resolve))
+  );
 }
 
 function preparePageForCapture(root) {
@@ -665,32 +773,60 @@ async function exportPdf() {
   const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
   const pages = $$('.doc-page');
   const btn = $('#btn-pdf') || $('#pub-btn-pdf');
+  const restoreScale = withNaturalPageScale();
+  await nextFrame();
 
-  for (let i = 0; i < pages.length; i++) {
-    if (btn) btn.textContent = `Preparing PDF… (${i + 1}/${pages.length})`;
+  try {
+    for (let i = 0; i < pages.length; i++) {
+      if (btn) btn.textContent = `Preparing PDF… (${i + 1}/${pages.length})`;
 
-    const pageEl = pages[i];
-    const canvas = await html2canvas(pageEl, {
-      scale: 1.5,
-      useCORS: true,
-      backgroundColor: pdfPageBackground(pageEl),
-      logging: false,
-      onclone: (_doc, cloneRoot) => {
-        preparePageForCapture(cloneRoot);
-        cloneRoot.querySelectorAll('.doc-page').forEach((el) => {
-          el.style.zoom = '1';
-          el.style.transform = 'none';
-          el.style.marginBottom = '0';
-        });
-        cloneRoot.querySelectorAll('textarea').forEach((el) => {
-          el.style.display = 'none';
-        });
-      },
-    });
+      const pageEl = pages[i];
+      const canvas = await html2canvas(pageEl, {
+        scale: 1.5,
+        useCORS: true,
+        backgroundColor: pdfPageBackground(pageEl),
+        logging: false,
+        width: pageEl.offsetWidth,
+        height: pageEl.offsetHeight,
+        onclone: (clonedDoc, cloneRoot) => {
+          const root = cloneRoot || clonedDoc;
+          preparePageForCapture(root);
+          copyLiveFormValues(root);
+          applyTypedAnswers(root);
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.88);
-    if (i > 0) pdf.addPage();
-    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+          root.querySelectorAll?.('.doc-page, .doc-page-inner')?.forEach?.((el) => {
+            el.style.zoom = '1';
+            el.style.transform = 'none';
+            el.style.marginBottom = '0';
+            el.style.width = '210mm';
+            el.style.height = el.classList?.contains('doc-page') ? '297mm' : '';
+          });
+
+          // Also handle when cloneRoot itself is the page
+          if (root.classList?.contains('doc-page')) {
+            root.style.zoom = '1';
+            root.style.transform = 'none';
+            root.style.marginBottom = '0';
+            root.style.width = '210mm';
+            root.style.height = '297mm';
+          }
+
+          root.querySelectorAll?.('textarea')?.forEach?.((el) => {
+            el.style.display = 'none';
+          });
+          root.querySelectorAll?.('.reflection-typed')?.forEach?.((el) => {
+            el.style.display = 'block';
+            el.style.visibility = 'visible';
+          });
+        },
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.88);
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+    }
+  } finally {
+    restoreScale();
   }
 
   const slug = state.place.replace(/[^\w]+/g, '-').replace(/^-|-$/g, '') || 'template';
