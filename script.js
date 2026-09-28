@@ -2555,6 +2555,12 @@ class CardStackSystem {
     }
 
     resetGivingCircleInviteDock() {
+        /* The desk — the circles and their resources, in windows — leaves with the surface. */
+        if (this.givingCircleDesk) {
+            this.givingCircleDesk.destroy();
+            this.givingCircleDesk = null;
+        }
+
         if (!this.givingCircleInviteEl) return;
         const wrap = this.givingCircleInviteEl;
         [
@@ -2633,6 +2639,20 @@ class CardStackSystem {
         
         /* No pre-cards — the envelope IS the experience. */
         this.createCardStack([], 'content', 'giving-circle', 'Giving Circle');
+
+        /* The circles themselves live on this same surface, each in its own window: the envelope is
+           the invitation, and these are what came of it. One door for the Giving Circle, the one
+           that already existed — not a second page elsewhere on the site. */
+        this.mountGivingCircleDesk();
+    }
+
+    mountGivingCircleDesk() {
+        if (!window.CircleDesk || this.givingCircleDesk) return;
+        this.givingCircleDesk = window.CircleDesk.mount(this.overlayElement, [
+            { href: 'givingcircle/rhinelander/', title: 'Rhinelander', kind: 'circle' },
+            { href: 'givingcircle/germantown/', title: 'Germantown', kind: 'circle' },
+            { href: 'givingcircle/resources/', title: 'Resources', kind: 'resources' },
+        ]);
     }
     
     openMailboxStack() {

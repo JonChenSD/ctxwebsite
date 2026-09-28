@@ -1,0 +1,297 @@
+/* The Giving Circle desk — pages open in windows.
+   Chunky period chrome (bevels, a title bar, a taskbar) drawn in CTX's own palette and fonts,
+   rather than grey-and-blue Windows 95. A placeholder to work from.
+
+   This styles only what windows.js adds, and it brings its own colours (falling back to the site's
+   when they are defined) so it can sit on the dreamscape without inheriting or fighting it. */
+
+/* The colours only. Every piece that can appear on its own carries them, not just the desk that
+   usually holds them — the schema page shows a window and an icon outside any desk. Custom
+   properties inherit, so naming each root costs nothing, and nothing has to re-state the list.
+   Layout stays on `.desk` below: a window that inherited the desk's own inset would fill it. */
+.desk,
+.win,
+.desk-icon,
+.desk-taskbar {
+  --desk-ink: var(--ctx-black, #111111);
+  --desk-paper: var(--ctx-cream, #f5f0e8);
+  --desk-accent: var(--ctx-yellow, #f0b500);
+  --desk-surface: var(--ui-surface, #1a1a1a);
+  --desk-text: var(--ui-text, #f5f0e8);
+  --desk-text-dim: var(--ui-text-dim, rgba(245, 240, 232, 0.65));
+  --desk-border: var(--ui-border, rgba(245, 240, 232, 0.25));
+  --desk-font: var(--font, "GT Pressura", system-ui, sans-serif);
+  --desk-font-display: var(--font-display, "GT Maru", var(--desk-font));
+}
+
+.desk {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+  /* The surface underneath — the invitation envelope — stays reachable: only the desk's own
+     furniture takes the pointer. */
+  pointer-events: none;
+}
+
+.desk-icons,
+.desk-taskbar,
+.win { pointer-events: auto; }
+
+/* ── Icons on the desk ──────────────────────────────────────────────── */
+
+.desk-icons {
+  display: grid;
+  gap: 18px 10px;
+  grid-template-columns: repeat(auto-fill, 104px);
+  /* Clear of the surface's own chrome — its back button, title and close sit across the top. */
+  padding: 84px 16px 20px;
+}
+
+.desk-icon {
+  background: none;
+  border: 2px solid transparent;
+  color: var(--desk-text);
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  gap: 8px;
+  justify-items: center;
+  padding: 10px 6px;
+  text-align: center;
+  width: 104px;
+}
+
+.desk-icon:hover,
+.desk-icon:focus-visible {
+  background: rgba(245, 240, 232, 0.06);
+  border-color: var(--desk-border);
+  outline: none;
+}
+
+.desk-icon:focus-visible { border-color: var(--desk-accent); }
+
+/* The glyph: a page with a folded corner, drawn rather than drawn-in. */
+.desk-icon-glyph {
+  background: var(--desk-paper);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+  clip-path: polygon(0 0, 72% 0, 100% 24%, 100% 100%, 0 100%);
+  height: 46px;
+  position: relative;
+  width: 38px;
+}
+
+.desk-icon-glyph::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--desk-ink) 0 2px,
+    transparent 2px 6px
+  );
+  content: "";
+  inset: 12px 7px 8px 6px;
+  opacity: 0.5;
+  position: absolute;
+}
+
+.desk-icon--circle .desk-icon-glyph { background: var(--desk-accent); }
+.desk-icon--resources .desk-icon-glyph { background: #9fb7ff; }
+
+.desk-icon-label {
+  font-size: 12px;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+}
+
+/* ── A window ───────────────────────────────────────────────────────── */
+
+.win {
+  background: var(--desk-surface);
+  border: 2px solid var(--desk-ink);
+  box-shadow:
+    inset 1px 1px 0 rgba(245, 240, 232, 0.22),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.6),
+    6px 6px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+  min-width: 240px;
+  position: absolute;
+}
+
+.win[hidden] { display: none; }
+
+.win-bar {
+  align-items: center;
+  background: linear-gradient(to bottom, #3a3a3a, #202020);
+  border-bottom: 2px solid var(--desk-ink);
+  color: var(--desk-text);
+  cursor: grab;
+  display: flex;
+  flex: none;
+  gap: 8px;
+  padding: 6px 6px 6px 10px;
+  touch-action: none;
+  user-select: none;
+}
+
+.win--active .win-bar {
+  background: linear-gradient(to bottom, var(--desk-accent), #c89600);
+  color: var(--desk-ink);
+}
+
+.win-bar:active { cursor: grabbing; }
+
+.win-title {
+  flex: 1;
+  font-family: var(--desk-font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.win-btn {
+  background: var(--desk-paper);
+  border: 2px solid var(--desk-ink);
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8a8a8a;
+  color: var(--desk-ink);
+  cursor: pointer;
+  font-family: var(--desk-font);
+  font-size: 11px;
+  font-weight: 700;
+  height: 20px;
+  line-height: 1;
+  padding: 0;
+  width: 22px;
+}
+
+.win-btn:active { box-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 #8a8a8a; }
+.win-btn:focus-visible { outline: 2px solid var(--desk-accent); outline-offset: 1px; }
+
+.win-body {
+  background: var(--desk-paper);
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.win-frame {
+  border: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+/* A drag anywhere over an iframe would be swallowed by the page inside; this catches it. */
+.win-shield {
+  display: none;
+  inset: 0;
+  position: absolute;
+}
+
+.desk.is-dragging .win-shield { display: block; }
+
+.win-resize {
+  bottom: 0;
+  cursor: nwse-resize;
+  height: 18px;
+  position: absolute;
+  right: 0;
+  touch-action: none;
+  width: 18px;
+}
+
+.win-resize::after {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--desk-ink) 0 2px,
+    transparent 2px 4px
+  );
+  content: "";
+  inset: 5px 3px 3px 5px;
+  position: absolute;
+}
+
+/* ── The taskbar ────────────────────────────────────────────────────── */
+
+/* Nothing open, nothing to show: the bar arrives with the first window. */
+.desk-taskbar[hidden] { display: none; }
+
+.desk-taskbar {
+  align-items: center;
+  background: var(--desk-surface);
+  border-top: 2px solid var(--desk-ink);
+  bottom: 0;
+  box-shadow: inset 0 1px 0 rgba(245, 240, 232, 0.16);
+  display: flex;
+  gap: 6px;
+  left: 0;
+  min-height: 40px;
+  padding: 5px 8px;
+  position: absolute;
+  right: 0;
+  overflow-x: auto;
+}
+
+.desk-taskbar-name {
+  color: var(--desk-text-dim);
+  flex: none;
+  font-family: var(--desk-font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding-right: 6px;
+  text-transform: uppercase;
+}
+
+.task {
+  background: #2a2a2a;
+  border: 2px solid var(--desk-ink);
+  box-shadow: inset 1px 1px 0 rgba(245, 240, 232, 0.18);
+  color: var(--desk-text);
+  cursor: pointer;
+  flex: none;
+  font-family: var(--desk-font);
+  font-size: 11px;
+  max-width: 180px;
+  overflow: hidden;
+  padding: 6px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task--active {
+  background: var(--desk-accent);
+  color: var(--desk-ink);
+}
+
+.task:focus-visible { outline: 2px solid var(--desk-accent); outline-offset: 1px; }
+
+/* On a phone a window is the screen: no dragging, no overlap, one thing at a time. */
+@media (max-width: 640px) {
+  .desk-icons {
+    grid-template-columns: repeat(auto-fill, 88px);
+    padding: 76px 12px 16px;
+  }
+  .desk-icon { width: 88px; }
+
+  .win {
+    bottom: 46px !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    height: auto !important;
+    width: auto !important;
+  }
+
+  .win-bar { cursor: default; }
+  .win-resize { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .win { transition: none; }
+}

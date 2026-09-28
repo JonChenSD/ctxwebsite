@@ -1,0 +1,16 @@
+{
+  "_read me": [
+    "Describing a file here improves its row on the page. It is never what makes it appear:",
+    "any file dropped into shared/, rhinelander/ or germantown/ shows up on its own, titled",
+    "from its filename. Run `npm run resources` from the folder above site/ to rebuild the page.",
+    "",
+    "Each item may have:",
+    "  title   what it should be called, if the filename isn't right",
+    "  note    one line about what it is or what to do with it",
+    "  file    the path inside this folder, e.g. \"shared/brief.pdf\"",
+    "  url     a link instead of a file (use one or the other)",
+    "  cohort  \"shared\", \"rhinelander\" or \"germantown\" \u2014 defaults to shared",
+    "  added   a date like \"2026-10-01\", if the file's own date is wrong"
+  ],
+  "items": []
+}
