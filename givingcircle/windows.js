@@ -72,6 +72,7 @@
       handle.addEventListener("pointerdown", (event) => {
         if (phone() || event.button !== 0) return;
         if (event.target.closest(".win-btn")) return;
+        if (win.classList.contains("win--max")) return; // a filled window stays put until restored
         event.preventDefault();
         // Capture keeps the gesture even when the cursor leaves the handle. It can refuse (another
         // element already holds this pointer); the drag is still worth having, so never let it throw.
@@ -157,6 +158,25 @@
       open.textContent = "↗";
       open.addEventListener("click", () => window.open(entry.href, "_blank", "noopener"));
 
+      // Filling the desk is a class, not new geometry: the window's own left, top, width and height
+      // stay on it untouched, so restoring puts it back exactly where it was.
+      const max = document.createElement("button");
+      max.type = "button";
+      max.className = "win-btn";
+      max.textContent = "□";
+      const fill = (on) => {
+        win.classList.toggle("win--max", on);
+        max.title = on ? "Restore" : "Fill the desk";
+        max.setAttribute("aria-label", `${on ? "Restore" : "Fill the desk with"} ${entry.title}`);
+        max.setAttribute("aria-pressed", String(on));
+      };
+      fill(Boolean(entry.maximized));
+      max.addEventListener("click", () => fill(!win.classList.contains("win--max")));
+      bar.addEventListener("dblclick", (event) => {
+        if (phone() || event.target.closest(".win-btn")) return;
+        fill(!win.classList.contains("win--max"));
+      });
+
       const close = document.createElement("button");
       close.type = "button";
       close.className = "win-btn";
@@ -165,7 +185,7 @@
       close.textContent = "✕";
       close.addEventListener("click", () => closeWindow(entry.href));
 
-      bar.append(title, open, close);
+      bar.append(title, max, open, close);
 
       const body = document.createElement("div");
       body.className = "win-body";

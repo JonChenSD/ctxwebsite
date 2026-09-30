@@ -2651,6 +2651,7 @@ class CardStackSystem {
         this.givingCircleDesk = window.CircleDesk.mount(this.overlayElement, [
             { href: 'givingcircle/rhinelander/', title: 'Rhinelander', kind: 'circle' },
             { href: 'givingcircle/germantown/', title: 'Germantown', kind: 'circle' },
+            { href: 'givingcircle/website/', title: 'HTML CSS Primer', kind: 'page', maximized: true },
             { href: 'givingcircle/resources/', title: 'Resources', kind: 'resources' },
         ]);
     }

@@ -1,0 +1,179 @@
+/* A website of your own — the opening page of the Giving Circle's website practice.
+   The fonts, the bar, the buttons and the footer are the Resources page's (resources.css, linked
+   first), so the Giving Circle's pages stay one family. This adds only the paper a long read sits
+   on. Nothing here needs JavaScript: the page is also an example a student can view the source of. */
+
+:root {
+  --ctx-blue: #4c75df;
+  --ctx-blue-dark: #2a5ddd;
+  --ctx-white: #ffffff;
+  --ctx-gray: #646464;
+  --ctx-gray-light: #e8e8e8;
+}
+
+/* ── The sheet ──────────────────────────────────────────────────────── */
+
+.sheet {
+  background: var(--ctx-cream);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+  color: var(--ctx-black);
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 40px 36px 36px;
+}
+
+.sheet h1,
+.sheet h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.sheet h1 {
+  font-size: 30px;
+  line-height: 1.1;
+  margin: 0 0 18px;
+}
+
+.sheet h2 {
+  border-top: 1px solid var(--ctx-black);
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 36px 0 12px;
+  padding-top: 14px;
+}
+
+.sheet h3 {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 22px 0 8px;
+}
+
+.sheet p { margin: 0 0 14px; }
+
+.lede { font-size: 19px; }
+
+.sheet a { color: var(--ctx-blue); }
+.sheet a:visited { color: var(--ctx-blue-dark); }
+
+/* The one thing to press on the page: the brand's yellow, per the design system. */
+.sheet a.download {
+  background: var(--ctx-yellow);
+  border: 1px solid var(--ctx-black);
+  color: var(--ctx-black);
+  display: inline-block;
+  font-weight: 500;
+  padding: 8px 14px;
+  text-decoration: none;
+}
+
+.sheet a.download:hover { background: #f5c42e; }
+
+.sheet a:focus-visible {
+  outline: 2px solid var(--ctx-blue);
+  outline-offset: 2px;
+}
+
+/* ── Lists ──────────────────────────────────────────────────────────── */
+
+.sheet ol,
+.sheet ul {
+  margin: 0 0 14px;
+  padding-left: 1.4em;
+}
+
+.sheet li + li { margin-top: 8px; }
+
+.practice li::marker,
+.steps > li::marker {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.steps > li + li { margin-top: 18px; }
+.steps > li > p { margin-bottom: 8px; }
+
+.links,
+.editors { font-size: 16px; }
+
+.by {
+  color: var(--ctx-gray);
+  font-size: 14px;
+  margin-left: 4px;
+}
+
+/* ── Sound and video ────────────────────────────────────────────────── */
+
+.media { margin: 8px 0 16px; }
+
+.media iframe {
+  aspect-ratio: 16 / 9;
+  background: var(--ctx-black);
+  border: 1px solid var(--ctx-black);
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.media audio {
+  display: block;
+  width: 100%;
+}
+
+/* Phone videos are usually tall: keep them to a height the page can hold, and never wider than it. */
+.media video {
+  background: var(--ctx-black);
+  display: block;
+  height: auto;
+  max-height: 560px;
+  max-width: 100%;
+}
+
+.media figcaption {
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+/* ── Code ───────────────────────────────────────────────────────────── */
+
+.sheet code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+}
+
+.sheet pre {
+  background: var(--ctx-white);
+  border: 1px solid var(--ctx-black);
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0 0 8px;
+  overflow-x: auto;
+  padding: 14px 16px;
+  tab-size: 2;
+}
+
+.sheet pre code { font-size: inherit; }
+
+/* ── The note at the bottom ─────────────────────────────────────────── */
+
+.source-note {
+  border-top: 1px solid var(--ctx-gray-light);
+  color: var(--ctx-gray);
+  font-size: 14px;
+  margin: 36px 0 0;
+  padding-top: 14px;
+}
+
+@media (max-width: 480px) {
+  .sheet {
+    font-size: 16px;
+    padding: 28px 20px 24px;
+  }
+
+  .sheet h1 { font-size: 26px; }
+  .lede { font-size: 17px; }
+  .sheet pre { font-size: 13px; }
+}

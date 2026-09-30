@@ -216,6 +216,20 @@
   position: absolute;
 }
 
+/* Filling the desk: everything above the taskbar, the same box a window gets on a phone. The inline
+   geometry underneath is kept, so restoring is only taking the class off. */
+.win--max {
+  bottom: 46px !important;
+  height: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  width: auto !important;
+}
+
+.win--max .win-bar { cursor: default; }
+.win--max .win-resize { display: none; }
+
 /* ── The taskbar ────────────────────────────────────────────────────── */
 
 /* Nothing open, nothing to show: the bar arrives with the first window. */
