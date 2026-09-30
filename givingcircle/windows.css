@@ -230,6 +230,11 @@
 .win--max .win-bar { cursor: default; }
 .win--max .win-resize { display: none; }
 
+/* A filled window goes over everything, the surface's own title and close button included. Those
+   sit in the dreamscape's controls at z-index 10001, inside the same overlay as the desk, so the desk
+   rises past them only while it holds a filled window. Without :has the controls simply stay on top. */
+.desk:has(.win--max) { z-index: 10002; }
+
 /* ── The taskbar ────────────────────────────────────────────────────── */
 
 /* Nothing open, nothing to show: the bar arrives with the first window. */
@@ -304,6 +309,9 @@
 
   .win-bar { cursor: default; }
   .win-resize { display: none; }
+
+  /* Every window on a phone is filled, so any open one goes over the surface's controls too. */
+  .desk:has(.win) { z-index: 10002; }
 }
 
 @media (prefers-reduced-motion: reduce) {
